@@ -111,9 +111,6 @@ int main(int argc, char** argv)
 	glutKeyboardFunc(keyboard); // keyboard 함수 만들어주자
 	//glutIdleFunc(idle); // idle 함수 만들어주자
 
-	/* Looping 시작 */
-	glutMainLoop();
-
 	/* MENU 생성 및 추가 */
 	submenu1 = glutCreateMenu(sub_menu_function);
 	glutAddMenuEntry("Sub1", 1);
@@ -125,6 +122,9 @@ int main(int argc, char** argv)
 	glutAddMenuEntry("Go!", 11);
 	glutAddSubMenu("Sub Menu", submenu1);
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
+
+	/* Looping 시작 */
+	glutMainLoop(); // 가장 마지막에 오도록...!
 
 	return 0;
 }
