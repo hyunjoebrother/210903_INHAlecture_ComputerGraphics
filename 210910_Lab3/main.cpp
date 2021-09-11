@@ -18,8 +18,9 @@ void init(void)
 	glClearColor(0.0f, 0.0f, 1.0f, 0.0f);
 
 	/* 화면 좌표 정보 설정 */
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
+	glMatrixMode(GL_PROJECTION); // 투상 좌표계 선언
+	glLoadIdentity(); // 좌표계 초기화
+
 	// (0,0) ~ (500,500) 2차원 viewport 생성
 	gluOrtho2D(0.0f, 500.0f, 0.0f, 500.0f);
 }
@@ -52,7 +53,7 @@ void draw_line(void)
 	/* 선 속성 */
 	glLineWidth(2.0f); // 선 두께
 	glEnable(GL_LINE_STIPPLE); // 선 패턴 변경하기 위해 STATE ON 시킴
-	glLineStipple(3, 0xAAAA); // 선 패턴
+	glLineStipple(3, 0xAAAA); // 선 패턴 (fatctor 주기, pattern 패턴)
 
 	glBegin(GL_LINES);
 	glVertex2i(50, 50);
@@ -98,8 +99,10 @@ void draw(void)
 	/* 화면 깨끗하게 지우기 */
 	glClear(GL_COLOR_BUFFER_BIT);
 
+	// draw_point();
 
-	glFlush();
+	/* 그리기 명령을 바로 그래픽 카드로 보냄*/
+	glFlush(); // Buffer에 명령을 모아둔 후에 한번에 수행
 }
 
 
