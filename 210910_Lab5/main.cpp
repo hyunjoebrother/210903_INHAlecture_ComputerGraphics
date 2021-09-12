@@ -1,32 +1,32 @@
-#include <gl/glut.h> //OpenGLÀ» »ç¿ëÇÏ±â À§ÇØ À©µµ¿ì ½Ã½ºÅÛ°ú ¿¬°áÇÏ´Â ÇÔ¼öµé
+#include <gl/glut.h> //OpenGLï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ã½ï¿½ï¿½Û°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½Ô¼ï¿½ï¿½ï¿½
 #include <stdio.h>
 
 
-double spin; // È¸Àü °¢µµ ¼±¾ð ¹× ÃÊ±âÈ­
+double spin; // È¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ê±ï¿½È­
 
 
-/* ÃÊ±âÈ­ ¹× Display Callback ÇÔ¼ö */
+/* ï¿½Ê±ï¿½È­ ï¿½ï¿½ Display Callback ï¿½Ô¼ï¿½ */
 
-// »ç¿ëÀÚ ÃÊ±âÈ­ ÇÔ¼ö 
+// ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­ ï¿½Ô¼ï¿½ 
 void init(void)
 {
-	/* È­¸éÀÇ ±âº»»ö ¼³Á¤ */
-	glClearColor(0.4f, 0.0f, 0.5f, 0.0f);
+	/* È­ï¿½ï¿½ï¿½ï¿½ ï¿½âº»ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ */
+	glClearColor(0.4f, 0.0f, 0.4f, 0.0f);
 
-	/* È­¸é ÁÂÇ¥ Á¤º¸ ¼³Á¤ */
-	glMatrixMode(GL_PROJECTION); // Åõ»ó ÁÂÇ¥°è ¼±¾ð
-	glLoadIdentity(); // ÁÂÇ¥°è ÃÊ±âÈ­
+	/* È­ï¿½ï¿½ ï¿½ï¿½Ç¥ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ */
+	glMatrixMode(GL_PROJECTION); // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ç¥ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	glLoadIdentity(); // ï¿½ï¿½Ç¥ï¿½ï¿½ ï¿½Ê±ï¿½È­
 
-	// (0,0) ~ (500,500) 2Â÷¿ø viewport »ý¼º
+	// (0,0) ~ (500,500) 2ï¿½ï¿½ï¿½ï¿½ viewport ï¿½ï¿½ï¿½ï¿½
 	gluOrtho2D(0.0f, 500.0f, 0.0f, 500.0f);
 }
 
 
-/* Callback ÇÔ¼ö Á¤ÀÇ */
+/* Callback ï¿½Ô¼ï¿½ ï¿½ï¿½ï¿½ï¿½ */
 
-void idle(void) // ¾Ö´Ï¸ÞÀÌ¼Ç ±¸Çö - ÄÄÇ»ÅÍÀÇ À¯ÈÞ½Ã°£¿¡ ÇÒ ÀÏ
+void idle(void) // ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ ï¿½ï¿½ï¿½ï¿½ - ï¿½ï¿½Ç»ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Þ½Ã°ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½
 {
-	spin = spin + 0.1; // È¸Àü °¢µµ + 0.1
+	spin = spin + 0.1; // È¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ + 0.1
 	if (spin > 360) {
 		spin -= 360;
 	}
@@ -34,10 +34,10 @@ void idle(void) // ¾Ö´Ï¸ÞÀÌ¼Ç ±¸Çö - ÄÄÇ»ÅÍÀÇ À¯ÈÞ½Ã°£¿¡ ÇÒ ÀÏ
 	glutPostRedisplay();
 }
 
-// Triangle ±×¸®±â
+// Triangle ï¿½×¸ï¿½ï¿½ï¿½
 void draw_triangle(void)
 {
-	/* ¸é »ö»ó ³ë¶õ»ö */
+	/* ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ */
 	glColor3f(1.0f, 1.0f, 0.0f);
 
 	glBegin(GL_TRIANGLES);
@@ -47,10 +47,10 @@ void draw_triangle(void)
 	glEnd();
 }
 
-// Quad ±×¸®±â
+// Quad ï¿½×¸ï¿½ï¿½ï¿½
 void draw_quad(void)
 {
-	/* »ö»ó */
+	/* ï¿½ï¿½ï¿½ï¿½ */
 	glColor3f(0, 1.0f, 1.0f);
 
 	glBegin(GL_QUADS);
@@ -61,10 +61,10 @@ void draw_quad(void)
 	glEnd();
 }
 
-// Polygon ±×¸®±â
+// Polygon ï¿½×¸ï¿½ï¿½ï¿½
 void draw_polygon(void)
 {
-	/* »ö»ó */
+	/* ï¿½ï¿½ï¿½ï¿½ */
 	glColor3f(1.0f, 0, 1.0f);
 
 	glBegin(GL_POLYGON);
@@ -76,33 +76,33 @@ void draw_polygon(void)
 	glEnd();
 }
 
-// Display Callback ÇÔ¼ö
+// Display Callback ï¿½Ô¼ï¿½
 void draw(void)
 {
-	/* È­¸é ±ú²ýÇÏ°Ô Áö¿ì±â */
+	/* È­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ */
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	// draw_point();
-	/* Ãß°¡ */
-	glMatrixMode(GL_MODELVIEW); // Mode È°¼ºÈ­
-	glLoadIdentity(); // È°¼ºÈ­µÈ Matrix¸¦ ´ÜÀ§Çà·Ä·Î ÃÊ±âÈ­
+	/* ï¿½ß°ï¿½ */
+	glMatrixMode(GL_MODELVIEW); // Mode È°ï¿½ï¿½È­
+	glLoadIdentity(); // È°ï¿½ï¿½È­ï¿½ï¿½ Matrixï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä·ï¿½ ï¿½Ê±ï¿½È­
 
-	// ¿ª¼øÀ¸·Î ¸í·ÉÀÌ ½ÇÇàµÊ
-	glTranslatef(250, 250, 0); // ÆòÇàÀÌµ¿ (¿ø·¡ ÀÚ¸®·Î µ¹¾Æ°¨)
-	glRotatef(spin, 0, 0, 1); // È¸Àü °¢µµ spinÀ¸·Î ¼³Á¤
-	glTranslatef(-250, -250, 0); // È¸Àü Áß½É (250, 250)À» ¿øÁ¡À¸·Î ÆòÇàÀÌµ¿
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½
+	glTranslatef(250, 250, 0); // ï¿½ï¿½ï¿½ï¿½ï¿½Ìµï¿½ (ï¿½ï¿½ï¿½ï¿½ ï¿½Ú¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Æ°ï¿½)
+	glRotatef(spin, 0, 0, 1); // È¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ spinï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	glTranslatef(-250, -250, 0); // È¸ï¿½ï¿½ ï¿½ß½ï¿½ (250, 250)ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ìµï¿½
 
 
-	/* ±×¸®±â ¸í·ÉÀ» ¹Ù·Î ±×·¡ÇÈ Ä«µå·Î º¸³¿*/
-	glFlush(); // Buffer¿¡ ¸í·ÉÀ» ¸ð¾ÆµÐ ÈÄ¿¡ ÇÑ¹ø¿¡ ¼öÇà
+	/* ï¿½×¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ù·ï¿½ ï¿½×·ï¿½ï¿½ï¿½ Ä«ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½*/
+	glFlush(); // Bufferï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æµï¿½ ï¿½Ä¿ï¿½ ï¿½Ñ¹ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
-	/* ¾Ö´Ï¸ÞÀÌ¼Ç ±¸Çö */
-	glutSwapBuffers(); // Back bufferÀ» Front buffer·Î swap
+	/* ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ ï¿½ï¿½ï¿½ï¿½ */
+	glutSwapBuffers(); // Back bufferï¿½ï¿½ Front bufferï¿½ï¿½ swap
 }
 
 
-/* GLUT - ¸Þ´º Ãß°¡ */
-// ¸Þ´º Ã³¸® ÇÔ¼ö
+/* GLUT - ï¿½Þ´ï¿½ ï¿½ß°ï¿½ */
+// ï¿½Þ´ï¿½ Ã³ï¿½ï¿½ ï¿½Ô¼ï¿½
 
 void main_menu_function(int option)
 {
@@ -124,7 +124,7 @@ void main_menu_function(int option)
 		draw_polygon();
 	}
 
-	// Spin ±â´É ±¸Çö
+	// Spin ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	//if (option == 17)
 	//{
 	//	idle();
@@ -135,35 +135,35 @@ void main_menu_function(int option)
 
 int main(int argc, char** argv)
 {
-	/* Window ÃÊ±âÈ­ */
+	/* Window ï¿½Ê±ï¿½È­ */
 	glutInit(&argc, argv);
 	//glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
-	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA); // ¾Ö´Ï¸ÞÀÌ¼Ç ±¸Çö
+	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA); // ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ ï¿½ï¿½ï¿½ï¿½
 	glutInitWindowSize(500, 500);
 	glutInitWindowPosition(300, 300);
-	glutCreateWindow("12181761_±èÇöÁ¶_Lab05 GL");
+	glutCreateWindow("12181761_ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½_Lab05 GL");
 
-	init(); // »ç¿ëÀÚ ÃÊ±âÈ­ ÇÔ¼ö
+	init(); // ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­ ï¿½Ô¼ï¿½
 
-	/* Popup menu »ý¼º ¹× Ãß°¡ */
+	/* Popup menu ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ß°ï¿½ */
 	glutCreateMenu(main_menu_function);
 
 	glutAddMenuEntry("Triangle", 1);
 	glutAddMenuEntry("Quad", 2);
 	glutAddMenuEntry("Polygon", 3);
-	// glutAddMenuEntry("Wanna Spin?",17); // Spin ¹öÆ° ±¸Çö
+	// glutAddMenuEntry("Wanna Spin?",17); // Spin ï¿½ï¿½Æ° ï¿½ï¿½ï¿½ï¿½
 	glutAddMenuEntry("Quit", 999);
 
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
 
 
-	/* Callback ÇÔ¼ö Á¤ÀÇ */
-	glutDisplayFunc(draw); // draw: ½ÇÁ¦ ±×¸®±â ÇÔ¼ö
-	glutIdleFunc(idle); // ¾Ö´Ï¸ÞÀÌ¼Ç ±¸Çö - ÄÄÇ»ÅÍÀÇ À¯ÈÞ½Ã°£¿¡ È£Ãâ
+	/* Callback ï¿½Ô¼ï¿½ ï¿½ï¿½ï¿½ï¿½ */
+	glutDisplayFunc(draw); // draw: ï¿½ï¿½ï¿½ï¿½ ï¿½×¸ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½
+	glutIdleFunc(idle); // ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ ï¿½ï¿½ï¿½ï¿½ - ï¿½ï¿½Ç»ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Þ½Ã°ï¿½ï¿½ï¿½ È£ï¿½ï¿½
 
 
-	/* Looping ½ÃÀÛ */
-	glutMainLoop(); // °¡Àå ¸¶Áö¸·¿¡ ¿Àµµ·Ï...!
+	/* Looping ï¿½ï¿½ï¿½ï¿½ */
+	glutMainLoop(); // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½...!
 
 	return 0;
 }
