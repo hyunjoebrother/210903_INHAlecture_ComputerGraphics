@@ -1,24 +1,24 @@
 
-#include <gl/glut.h> //OpenGLÀ» »ç¿ëÇÏ±â À§ÇØ À©µµ¿ì ½Ã½ºÅÛ°ú ¿¬°áÇÏ´Â ÇÔ¼öµé
+#include <gl/glut.h> //OpenGLì„ ì‚¬ìš©í•˜ê¸° ìœ„í•´ ìœˆë„ìš° ì‹œìŠ¤í…œê³¼ ì—°ê²°í•˜ëŠ” í•¨ìˆ˜ë“¤
 #include <stdio.h>
 
-// Á¡ Âï±â ÁÂÇ¥ Àü¿ªº¯¼ö
+// ì  ì°ê¸° ì¢Œí‘œ ì „ì—­ë³€ìˆ˜
 float pointX, pointY;
 
 
-/* ÃÊ±âÈ­ ¹× Display Callback ÇÔ¼ö */
+/* ì´ˆê¸°í™” ë° Display Callback í•¨ìˆ˜ */
 
-// »ç¿ëÀÚ ÃÊ±âÈ­ ÇÔ¼ö 
+// ì‚¬ìš©ì ì´ˆê¸°í™” í•¨ìˆ˜ 
 void init(void)
 {
-	/* È­¸éÀÇ ±âº»»öÀ¸·Î Black ¼³Á¤ */
+	/* í™”ë©´ì˜ ê¸°ë³¸ìƒ‰ìœ¼ë¡œ Black ì„¤ì • */
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
-	/* È­¸é ÁÂÇ¥ Á¤º¸ ¼³Á¤ */
-	glMatrixMode(GL_PROJECTION); // Åõ»ó ÁÂÇ¥°è ¼±¾ğ
-	glLoadIdentity(); // ÁÂÇ¥°è ÃÊ±âÈ­
+	/* í™”ë©´ ì¢Œí‘œ ì •ë³´ ì„¤ì • */
+	glMatrixMode(GL_PROJECTION); // íˆ¬ìƒ ì¢Œí‘œê³„ ì„ ì–¸
+	glLoadIdentity(); // ì¢Œí‘œê³„ ì´ˆê¸°í™”
 
-	// (0,0) ~ (500,500) 2Â÷¿ø viewport »ı¼º
+	// (0,0) ~ (500,500) 2ì°¨ì› viewport ìƒì„±
 	gluOrtho2D(0.0f, 500.0f, 0.0f, 500.0f);
 
 	// Alpha-Blendign OFF
@@ -27,14 +27,14 @@ void init(void)
 
 
 
-/* Callback ÇÔ¼ö Á¤ÀÇ */
+/* Callback í•¨ìˆ˜ ì •ì˜ */
 
-// Á¡ ±×¸®±â
+// ì  ê·¸ë¦¬ê¸°
 void draw_point()
 {
-	/* Á¡ »ö»ó ºÓÀº»ö */
+	/* ì  ìƒ‰ìƒ ë¶‰ì€ìƒ‰ */
 	glColor3f(1.0f, 0.0f, 0.0f);
-	/* Á¡ÀÇ Å©±â (ÃÊ±â°ªÀº 1.0) */
+	/* ì ì˜ í¬ê¸° (ì´ˆê¸°ê°’ì€ 1.0) */
 	glPointSize(5.0f);
 
 	glBegin(GL_POINTS);
@@ -43,16 +43,16 @@ void draw_point()
 	glEnd();
 }
 
-// ¼± ±×¸®±â
+// ì„  ê·¸ë¦¬ê¸°
 void draw_line(void)
 {
-	/* ¼± »ö»ó ³ë¶õ»ö */
+	/* ì„  ìƒ‰ìƒ ë…¸ë€ìƒ‰ */
 	glColor3f(1.0f, 1.0f, 0.0f);
 
-	/* ¼± ¼Ó¼º */
-	glLineWidth(2.0f); // ¼± µÎ²²
-	glEnable(GL_LINE_STIPPLE); // ¼± ÆĞÅÏ º¯°æÇÏ±â À§ÇØ STATE ON ½ÃÅ´
-	glLineStipple(3, 0xAAAA); // ¼± ÆĞÅÏ (fatctor ÁÖ±â, pattern ÆĞÅÏ)
+	/* ì„  ì†ì„± */
+	glLineWidth(2.0f); // ì„  ë‘ê»˜
+	glEnable(GL_LINE_STIPPLE); // ì„  íŒ¨í„´ ë³€ê²½í•˜ê¸° ìœ„í•´ STATE ON ì‹œí‚´
+	glLineStipple(3, 0xAAAA); // ì„  íŒ¨í„´ (fatctor ì£¼ê¸°, pattern íŒ¨í„´)
 
 	glBegin(GL_LINES);
 	glVertex2i(50, 50);
@@ -62,10 +62,10 @@ void draw_line(void)
 	glEnd();
 }
 
-// ¸é(Triangle) ±×¸®±â
+// ë©´(Triangle) ê·¸ë¦¬ê¸°
 void draw_triangle(void)
 {
-	/* ¸é »ö»ó ³ë¶õ»ö */
+	/* ë©´ ìƒ‰ìƒ ë…¸ë€ìƒ‰ */
 	glColor3f(1.0f, 1.0f, 0.0f);
 
 
@@ -76,10 +76,10 @@ void draw_triangle(void)
 	glEnd();
 }
 
-// Polygon ±×¸®±â
+// Polygon ê·¸ë¦¬ê¸°
 void draw_polygon(void)
 {
-	/* »ö»ó */
+	/* ìƒ‰ìƒ */
 	glColor3f(0.3f, 0.2f, 1.0f);
 
 	glBegin(GL_POLYGON);
@@ -92,13 +92,13 @@ void draw_polygon(void)
 }
 
 
-// Display Callback ÇÔ¼ö
+// Display Callback í•¨ìˆ˜
 void draw(void)
 {
-	// glClear(GL_COLOR_BUFFER_BIT); -> ÀÌÁ¦ °è¼Ó À¯ÁöµÊ
+	// glClear(GL_COLOR_BUFFER_BIT); -> ì´ì œ ê³„ì† ìœ ì§€ë¨
 
-	/* ±×¸®±â ¸í·ÉÀ» ¹Ù·Î ±×·¡ÇÈ Ä«µå·Î º¸³¿*/
-	glFlush(); // Buffer¿¡ ¸í·ÉÀ» ¸ğ¾ÆµĞ ÈÄ¿¡ ÇÑ¹ø¿¡ ¼öÇà
+	/* ê·¸ë¦¬ê¸° ëª…ë ¹ì„ ë°”ë¡œ ê·¸ë˜í”½ ì¹´ë“œë¡œ ë³´ëƒ„*/
+	glFlush(); // Bufferì— ëª…ë ¹ì„ ëª¨ì•„ë‘” í›„ì— í•œë²ˆì— ìˆ˜í–‰
 }
 
 /* Alpha-Blending */
@@ -119,28 +119,28 @@ void antialiasing_function(void)
 	glEnable(GL_POLYGON_SMOOTH);
 }
 
-/* ÇÑ¹ø¿¡ clearÇÏ´Â ÇÔ¼ö -> ¸Ş´º µû·Î ¸¸µé¾îÁÜ */
+/* í•œë²ˆì— clearí•˜ëŠ” í•¨ìˆ˜ -> ë©”ë‰´ ë”°ë¡œ ë§Œë“¤ì–´ì¤Œ */
 void clear(void)
 {
-	/* È­¸é ±ú²ıÇÏ°Ô Áö¿ì±â */
+	/* í™”ë©´ ê¹¨ë—í•˜ê²Œ ì§€ìš°ê¸° */
 	glClear(GL_COLOR_BUFFER_BIT);
 }
 
 
-/* GLUT - ¸¶¿ì½º ÀÔ·Â Ã³¸® */
+/* GLUT - ë§ˆìš°ìŠ¤ ì…ë ¥ ì²˜ë¦¬ */
 
-// Callback ÇÔ¼ö mouse
+// Callback í•¨ìˆ˜ mouse
 // 
-// ÀÎÀÚ Á¤º¸
+// ì¸ì ì •ë³´
 // button : Left = 0, Middle = 1, Right = 2
-// state : Up = 0, Down = 1 (0 -> 1 Ãâ·Â)
-// x, y : ¸¶¿ì½º Å¬¸¯µÈ ÁÂÇ¥
+// state : Up = 0, Down = 1 (0 -> 1 ì¶œë ¥)
+// x, y : ë§ˆìš°ìŠ¤ í´ë¦­ëœ ì¢Œí‘œ
 
 void mouse(int button, int state, int x, int y)
 {
 	if (button == GLUT_LEFT_BUTTON)
 	{
-		if (state == GLUT_DOWN) // ´©¸¥ »óÅÂ
+		if (state == GLUT_DOWN) // ëˆ„ë¥¸ ìƒíƒœ
 		{
 			printf("Mouse button is clicked! (%d, %d) \n", x, y);
 			pointX = x;
@@ -150,9 +150,9 @@ void mouse(int button, int state, int x, int y)
 }
 
 
-/* GLUT - Å°º¸µå ÀÔ·Â Ã³¸® */
+/* GLUT - í‚¤ë³´ë“œ ì…ë ¥ ì²˜ë¦¬ */
 
-// Callback ÇÔ¼ö keyboard
+// Callback í•¨ìˆ˜ keyboard
 void keyboard(unsigned char key, int x, int y)
 {
 	printf("You pressed %c\n", key);
@@ -170,8 +170,8 @@ void keyboard(unsigned char key, int x, int y)
 }
 
 
-/* GLUT - ¸Ş´º Ãß°¡ */
-// ¸Ş´º Ã³¸® ÇÔ¼ö
+/* GLUT - ë©”ë‰´ ì¶”ê°€ */
+// ë©”ë‰´ ì²˜ë¦¬ í•¨ìˆ˜
 void sub_menu_function(int option)
 {
 	printf("Submenu %d has been selected\n", option);
@@ -216,25 +216,25 @@ void main_menu_function(int option)
 
 int main(int argc, char** argv)
 {
-	int submenu1; // ¸Ş´º ¸¸µé±â
+	int submenu1; // ë©”ë‰´ ë§Œë“¤ê¸°
 
-	/* Window ÃÊ±âÈ­ */
+	/* Window ì´ˆê¸°í™” */
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGBA);
 	glutInitWindowSize(500, 500);
 	glutInitWindowPosition(300, 300);
-	glutCreateWindow("12181761_±èÇöÁ¶_Lab04 GL");
+	glutCreateWindow("12181761_ê¹€í˜„ì¡°_Lab04 GL");
 
-	init(); // »ç¿ëÀÚ ÃÊ±âÈ­ ÇÔ¼ö
-
-
-	/* Callback ÇÔ¼ö Á¤ÀÇ */
-	glutDisplayFunc(draw); // draw: ½ÇÁ¦ ±×¸®±â ÇÔ¼ö
-	glutMouseFunc(mouse); // mouse ÇÔ¼ö ¸¸µé¾îÁÖÀÚ
-	glutKeyboardFunc(keyboard); // keyboard ÇÔ¼ö ¸¸µé¾îÁÖÀÚ
+	init(); // ì‚¬ìš©ì ì´ˆê¸°í™” í•¨ìˆ˜
 
 
-	/* Popup menu »ı¼º ¹× Ãß°¡ */
+	/* Callback í•¨ìˆ˜ ì •ì˜ */
+	glutDisplayFunc(draw); // draw: ì‹¤ì œ ê·¸ë¦¬ê¸° í•¨ìˆ˜
+	glutMouseFunc(mouse); // mouse í•¨ìˆ˜ ë§Œë“¤ì–´ì£¼ì
+	glutKeyboardFunc(keyboard); // keyboard í•¨ìˆ˜ ë§Œë“¤ì–´ì£¼ì
+
+
+	/* Popup menu ìƒì„± ë° ì¶”ê°€ */
 	submenu1 = glutCreateMenu(sub_menu_function);
 	glutAddMenuEntry("Point", 1);
 	glutAddMenuEntry("Line", 2);
@@ -248,8 +248,8 @@ int main(int argc, char** argv)
 	glutAddMenuEntry("Quit", 999);
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
 
-	/* Looping ½ÃÀÛ */
-	glutMainLoop(); // °¡Àå ¸¶Áö¸·¿¡ ¿Àµµ·Ï...!
+	/* Looping ì‹œì‘ */
+	glutMainLoop(); // ê°€ì¥ ë§ˆì§€ë§‰ì— ì˜¤ë„ë¡...!
 
 	return 0;
 }
