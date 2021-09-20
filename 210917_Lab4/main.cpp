@@ -5,6 +5,9 @@
 // 점 찍기 좌표 전역변수
 float pointX, pointY;
 
+// 다른 전역변수 추가 필요
+int
+
 
 /* 초기화 및 Display Callback 함수 */
 
