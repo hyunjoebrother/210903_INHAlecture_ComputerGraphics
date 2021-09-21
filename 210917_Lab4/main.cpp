@@ -2,11 +2,18 @@
 #include <gl/glut.h> //OpenGL을 사용하기 위해 윈도우 시스템과 연결하는 함수들
 #include <stdio.h>
 
-// 점 찍기 좌표 전역변수
-float pointX, pointY;
+// Character 출력 - strlen 함수
+#include <string.h>
 
-// 다른 전역변수 추가 필요
-int
+
+// 점 찍기 좌표 전역변수
+int pointX, pointY;
+
+// Alpha-Blending 할 때 Alpha값 전역변수
+GLfloat Alpha = 0;
+
+// AntiAliasing 하기 전에 기본 상태는 false로 지정
+bool antiON = false;
 
 
 /* 초기화 및 Display Callback 함수 */
@@ -33,12 +40,12 @@ void init(void)
 /* Callback 함수 정의 */
 
 // 점 그리기
-void draw_point()
+void draw_point(void)
 {
 	/* 점 색상 붉은색 */
 	glColor3f(1.0f, 0.0f, 0.0f);
 	/* 점의 크기 (초기값은 1.0) */
-	glPointSize(5.0f);
+	glPointSize(10.0f);
 
 	glBegin(GL_POINTS);
 	glVertex2i(pointX, pointY);
@@ -53,7 +60,7 @@ void draw_line(void)
 	glColor3f(1.0f, 1.0f, 0.0f);
 
 	/* 선 속성 */
-	glLineWidth(2.0f); // 선 두께
+	glLineWidth(5.0f); // 선 두께
 	glEnable(GL_LINE_STIPPLE); // 선 패턴 변경하기 위해 STATE ON 시킴
 	glLineStipple(3, 0xAAAA); // 선 패턴 (fatctor 주기, pattern 패턴)
 
@@ -87,11 +94,81 @@ void draw_polygon(void)
 
 	glBegin(GL_POLYGON);
 	glVertex2i(10, 10);
-	glVertex2i(40, 10);
-	glVertex2i(120, 70);
-	glVertex2i(200, 150);
-	glVertex2i(300, 150);
+	glVertex2i(40, 70);
+	glVertex2i(120, 200);
+	glVertex2i(250, 450);
+	glVertex2i(450, 350);
 	glEnd();
+}
+
+
+/* Alpha-Blending */
+void blend_function(void)
+{
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	// Left Triangle - Alpha값 조절
+	glColor4f(1.0, 1.0, 0.0, Alpha); // yellow
+	glBegin(GL_TRIANGLES);
+	glVertex2i(50, 50);
+	glVertex2i(50, 450);
+	glVertex2i(350, 250);
+	glEnd();
+
+	// Right Triangle
+	glColor4f(0.0, 1.0, 1.0, 0.75); // cyan
+	glBegin(GL_TRIANGLES);
+	glVertex2i(450, 50);
+	glVertex2i(450, 450);
+	glVertex2i(150, 250);
+	glEnd();
+	
+	glFlush();
+
+	// 화면 재생성 - 실시간 반영
+	glutPostRedisplay();
+}
+
+/* Antialiasing */
+void antialiasing_function(bool antiON)
+{
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	// ON/OFF
+	if (antiON)
+	{
+		glEnable(GL_POINT_SMOOTH);
+		glEnable(GL_LINE_SMOOTH);
+		glEnable(GL_POLYGON_SMOOTH);
+
+		//printf("Antialiasing ON\n");
+	} 
+	else {
+		glDisable(GL_POINT_SMOOTH);
+		glDisable(GL_LINE_SMOOTH);
+		glDisable(GL_POLYGON_SMOOTH);
+
+		//printf("Antialiasing OFF\n");
+	}
+
+	glFlush();
+
+	// 화면 재생성 - 실시간 반영
+	glutPostRedisplay();
+}
+
+
+// Character 출력 함수
+void draw_string(void* font, const char* str, int x, int y)
+{
+	unsigned int i;
+	glRasterPos2i(x, y);
+	for (i = 0; i < strlen(str); i++) // 상단에 string.h 헤더파일 선언
+	{
+		glutBitmapCharacter(font, str[i]);
+	}
 }
 
 
@@ -100,27 +177,20 @@ void draw(void)
 {
 	// glClear(GL_COLOR_BUFFER_BIT); -> 이제 계속 유지됨
 
+	// antialiasing ON/OFF
+	antialiasing_function(antiON);
+
+	// Character 출력
+	glColor3f(1.0f, 0.7f, 0.5f);
+	draw_string(GLUT_BITMAP_TIMES_ROMAN_24, "Graphics are cool!", 10, 10);
+	glColor3f(1.0f, 1.0f, 1.5f);
+	draw_string(GLUT_BITMAP_HELVETICA_18, "12181761 Kim Hyunjoe - Lab04", 230, 470);
+
+
 	/* 그리기 명령을 바로 그래픽 카드로 보냄*/
 	glFlush(); // Buffer에 명령을 모아둔 후에 한번에 수행
 }
 
-/* Alpha-Blending */
-void blend_function(void)
-{
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glColor4f(0.0, 1.0, 1.0, 0.75);
-}
-
-/* Antialiasing */
-void antialiasing_function(void)
-{
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glEnable(GL_POINT_SMOOTH);
-	glEnable(GL_LINE_SMOOTH);
-	glEnable(GL_POLYGON_SMOOTH);
-}
 
 /* 한번에 clear하는 함수 -> 메뉴 따로 만들어줌 */
 void clear(void)
@@ -149,6 +219,9 @@ void mouse(int button, int state, int x, int y)
 			pointX = x;
 			pointY = y;
 		}
+
+		// 화면 재생성 - 실시간 반영
+		glutPostRedisplay();
 	}
 }
 
@@ -159,17 +232,37 @@ void mouse(int button, int state, int x, int y)
 void keyboard(unsigned char key, int x, int y)
 {
 	printf("You pressed %c\n", key);
+	// Left Triangle Alpha 값 조절
+	switch (key)
+	{
+	// Alpha-Blending
+	case 'w':
+		Alpha += 5.0;
+		printf("Alpha : %f\n", Alpha);
+		break;
 
-	if (key == 'b')
-	{
-		printf("You want Alpha-Blending\n");
-		blend_function();
+	case 's':
+		Alpha -= 5.0;
+		printf("Alpha : %f\n", Alpha);
+		break;
+
+
+	// Antialiasing ON/OFF
+	case 'a':
+		antiON = true;
+		printf("Anti-Aliasing ON\n");
+		antialiasing_function(antiON);
+		break;
+
+	case 'x':
+		antiON = false;
+		printf("Anti-Aliasing OFF\n");
+		antialiasing_function(antiON);
+		break;
 	}
-	if (key == 'a')
-	{
-		printf("You want Antialiasing\n");
-		antialiasing_function();
-	}
+
+	// 화면 재생성 - 실시간 반영
+	glutPostRedisplay();
 }
 
 
@@ -197,7 +290,11 @@ void sub_menu_function(int option)
 		draw_polygon();
 		break;
 	}
+
+	// 화면 재생성 - 실시간 반영
+	glutPostRedisplay();
 }
+
 
 void main_menu_function(int option)
 {
@@ -205,6 +302,11 @@ void main_menu_function(int option)
 
 	switch (option)
 	{
+	case 123 :
+		printf("Lets Alpha-Blending!\n");
+		blend_function();
+		break;
+
 	case 831:
 		printf("Lets Clear this window!\n");
 		clear();
@@ -214,6 +316,9 @@ void main_menu_function(int option)
 		exit(0);
 		break;
 	}
+
+	// 화면 재생성 - 실시간 반영
+	glutPostRedisplay();
 }
 
 
@@ -247,6 +352,7 @@ int main(int argc, char** argv)
 	glutCreateMenu(main_menu_function);
 
 	glutAddSubMenu("Wanna Draw? Choose Mode", submenu1);
+	glutAddMenuEntry("Wanna Alpha-Blending?", 123);
 	glutAddMenuEntry("Clear", 831);
 	glutAddMenuEntry("Quit", 999);
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
