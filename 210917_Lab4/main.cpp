@@ -15,6 +15,9 @@ GLfloat Alpha = 0;
 // AntiAliasing 하기 전에 기본 상태는 false로 지정
 bool antiON = false;
 
+// 점찍기 for문을 위한 전역변수
+int i; 
+
 
 /* 초기화 및 Display Callback 함수 */
 
@@ -48,8 +51,8 @@ void draw_point(void)
 	glPointSize(10.0f);
 
 	glBegin(GL_POINTS);
-	glVertex2i(pointX, pointY);
-	printf("point X, Y : (%d, %d)\n", pointX, pointY);
+	glVertex2i(pointX, 500 - pointY);
+	printf("point X, Y : (%d, %d)\n", pointX, 500 - pointY);
 	glEnd();
 }
 
@@ -65,10 +68,13 @@ void draw_line(void)
 	glLineStipple(3, 0xAAAA); // 선 패턴 (fatctor 주기, pattern 패턴)
 
 	glBegin(GL_LINES);
-	glVertex2i(50, 50);
-	glVertex2i(250, 450);
-	glVertex2i(300, 450);
-	glVertex2i(400, 100);
+
+	for (i = 0; i < 2; i++)
+	{
+		glVertex2i(pointX, 500 - pointY);
+		printf("Line point X, Y : (%d, %d)\n", pointX, 500 - pointY);	
+	}
+
 	glEnd();
 }
 
@@ -76,8 +82,7 @@ void draw_line(void)
 void draw_triangle(void)
 {
 	/* 면 색상 노란색 */
-	glColor3f(1.0f, 1.0f, 0.0f);
-
+	glColor3f(0.0f, 1.0f, 0.0f);
 
 	glBegin(GL_TRIANGLES);
 	glVertex2i(50, 50);
@@ -215,15 +220,18 @@ void mouse(int button, int state, int x, int y)
 	{
 		if (state == GLUT_DOWN) // 누른 상태
 		{
-			printf("Mouse button is clicked! (%d, %d) \n", x, y);
 			pointX = x;
 			pointY = y;
+			printf("Mouse button is clicked! (%d, %d) \n", x, y);
 		}
 
 		// 화면 재생성 - 실시간 반영
 		glutPostRedisplay();
 	}
 }
+
+/* 마우스 입력으로 점 찍는 횟수 조건 */
+void click_point(int option) { }
 
 
 /* GLUT - 키보드 입력 처리 */
