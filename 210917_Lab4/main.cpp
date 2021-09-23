@@ -68,13 +68,15 @@ void draw_line(void)
 	glLineStipple(3, 0xAAAA); // 선 패턴 (fatctor 주기, pattern 패턴)
 
 	glBegin(GL_LINES);
-
+	/*
 	for (i = 0; i < 2; i++)
 	{
 		glVertex2i(pointX, 500 - pointY);
 		printf("Line point X, Y : (%d, %d)\n", pointX, 500 - pointY);	
 	}
-
+	*/
+	glVertex2i(150, 470);
+	glVertex2i(320, 30);
 	glEnd();
 }
 
@@ -141,6 +143,11 @@ void antialiasing_function(bool antiON)
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+	// HINT 조건 추가
+	glHint(GL_POINT_SMOOTH_HINT, GL_FASTEST);
+	glHint(GL_LINE_SMOOTH_HINT,  GL_NICEST);
+	glHint(GL_POLYGON_SMOOTH_HINT, GL_DONT_CARE);
+	
 	// ON/OFF
 	if (antiON)
 	{
@@ -231,7 +238,7 @@ void mouse(int button, int state, int x, int y)
 }
 
 /* 마우스 입력으로 점 찍는 횟수 조건 */
-void click_point(int option) { }
+//void click_point(int option) { }
 
 
 /* GLUT - 키보드 입력 처리 */
