@@ -3,19 +3,22 @@
 
 // Character 출력 - strlen 함수
 #include <string.h>
+#include <math.h>
 
 
 // 점 찍기 좌표 전역변수
 int pointX, pointY;
 
-// 카메라 좌표를 위한 전역변수 
-int radius, theta, phi;
-int cam[3], center[3], up[3];
+// 카메라 좌표 -> 구좌표계를 위한 전역변수 
+double radius = 10;
+double theta = 45, phi = 45;
 
+double cam[3]; // 카메라 위치
+double center[3] = { 0, 0, 0 }; // 바라보는 점
+double up[3] = { 0, 1, 0 }; // 카메라의 Up vector
 
-// 구좌표계 ON
-
-
+// 구좌표계 지정
+int x, y, z;
 
 /* 초기화 및 Display Callback 함수 */
 
@@ -40,19 +43,21 @@ void init(void)
 /* WM_SIZE의 메시지 처리를 위한 callback 함수 */
 // 윈도우 생성 및 크기 변화시 WM_SIZE 메시지 발생
 
+// Viewport TF와 Projection TF 구현
+// -> resize 함수 (WM_SIZE 처리)에서 (= glutReshapeFunc)
 void resize(int width, int height)
 {
 	// Viewport TF
 	glViewport(0, 0, width, height); // 윈도우 크기 변화시 viewport 재설정
 	printf("Window Change! Resize function ON\n"); // 메시지 출력 확인용
 	/* 화면 좌표 정보 설정 */
-	glMatrixMode(GL_PROJECTION); // 투상 좌표계 선언
+	glMatrixMode(GL_PROJECTION); // 투상 좌표계 선언 -> Projection TF 가능하도록
 	glLoadIdentity(); // 좌표계 초기화
 
 	// Projection TF
 	gluPerspective(45, (float)width / (float)height, 1, 500);
 
-	glMatrixMode(GL_MODELVIEW);
+	glMatrixMode(GL_MODELVIEW); // Projection 설정 후 환원
 }
 
 /* xyz 좌표계 그리기 함수 */
@@ -78,27 +83,37 @@ void draw_axis(void)
 }
 
 // Display Callback 함수
+// draw 함수 호출 전에 resize() 호출됨 -> Viewport & Projection TF 끝난 상태
+// -> Viewing TF ON
 void draw(void)
 {
 	printf("Draw function ON\n");
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
+	glLoadIdentity(); // 단위행렬로 
 	
-	// Viewing TF
-	// 카메라 위치, 카메라가 바라보는 점 위치, 카메라 위쪽의 방향 좌표 
-	gluLookAt(10, 10, 10, 0, 0, 0, 0, 0, 1); 
+	// Viewing TF (World -> Camera Coordinate)
+	// cam, center, up -> 키보드 입력을 받자
+	// gluLookAt(5, 0, -10, 0, 0, 0, 0, 1, 0); 
 	// -> (10,10,10)에서 (0,0,0) 바라보는 Viewing TF
 
+	x = radius * sin(theta) * cos(phi);
+	y = radius * sin(theta) * cos(theta);
+	z = radius * cos(theta);
+
+	gluLookAt(x, y, z, 0, 0, 0, 0, 1, 0);
+
+
+	// Teapot 그리기
 	glColor3f(1, 1, 0);
 	glutWireTeapot(4);
-	draw_axis();
+	draw_axis(); // 좌표계
 
 
 	/* 그리기 명령을 바로 그래픽 카드로 보냄*/
 	glFlush(); // Buffer에 명령을 모아둔 후에 한번에 수행
-	glutSwapBuffers(); // Double Buffering시
+	glutSwapBuffers(); // Double Buffering시 Buffer Swap
 }
 
 
@@ -122,10 +137,35 @@ void keyboard(unsigned char key, int x, int y)
 }
 
 // key에 따른 phi, theta 값 변경 by 키보드 입력
-void special_keyboard(int key, int x, int y)
+void special_keyboard(int key, int theta, int phi)
 {
-	if(key == GLUT_KEY_LEFT)
+	if (key == GLUT_KEY_LEFT)
+	{
+		phi += 5;
+		printf("Got Left_KEY\ntheta : %d, phi : %d\n", theta, phi);
+	}
+	if (key == GLUT_KEY_RIGHT)
+	{
+		phi -= 5;
+		printf("Got Right_KEY\ntheta : %d, phi : %d\n", theta, phi);
+	}
+	if (key == GLUT_KEY_UP)
+	{
+		theta -= 5;
+		printf("Got Up_KEY\ntheta : %d, phi : %d\n", theta, phi);
+	}
+	if (key == GLUT_KEY_DOWN)
+	{
+		theta += 5;
+		printf("Got Down_KEY\ntheta : %d, phi : %d\n", theta, phi);
+	}
+
+	// 화면 재생성 - 실시간 반영
+	glutPostRedisplay();
 }
+
+// 마우스 휠 변화 Callback 함수
+
 
 /* GLUT - 메뉴 추가 */
 
@@ -168,7 +208,8 @@ int main(int argc, char** argv)
 	glutDisplayFunc(draw); // draw: 실제 그리기 함수
 	glutKeyboardFunc(keyboard); // keyboard 함수 만들어주자
 
-	glutReshapeFunc(resize); // WM_SIZE 처리하는 resize 함수
+	glutReshapeFunc(resize); // WM_SIZE 처리하는 Callback 함수 resize 지정
+	glutSpecialFunc(special_keyboard); // 키보드 입력으로 시점 조정
 
 	glutCreateMenu(main_menu_function);
 
