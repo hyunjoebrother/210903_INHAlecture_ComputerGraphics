@@ -1,35 +1,35 @@
-#include <gl/glut.h> //OpenGLÀ» »ç¿ëÇÏ±â À§ÇØ À©µµ¿ì ½Ã½ºÅÛ°ú ¿¬°áÇÏ´Â ÇÔ¼öµé
+#include <gl/glut.h> //OpenGLì„ ì‚¬ìš©í•˜ê¸° ìœ„í•´ ìœˆë„ìš° ì‹œìŠ¤í…œê³¼ ì—°ê²°í•˜ëŠ” í•¨ìˆ˜ë“¤
 #include <stdio.h>
 #include <iostream>
 using namespace std;
-// Character Ãâ·Â - strlen ÇÔ¼ö
+// Character ì¶œë ¥ - strlen í•¨ìˆ˜
 #include <string.h>
 #include <math.h>
 
-// Á¡ Âï±â ÁÂÇ¥ Àü¿ªº¯¼ö
+// ì  ì°ê¸° ì¢Œí‘œ ì „ì—­ë³€ìˆ˜
 int pointX, pointY;
 
-// Ä«¸Ş¶ó ÁÂÇ¥ -> ±¸ÁÂÇ¥°è¸¦ À§ÇÑ Àü¿ªº¯¼ö 
+// ì¹´ë©”ë¼ ì¢Œí‘œ -> êµ¬ì¢Œí‘œê³„ë¥¼ ìœ„í•œ ì „ì—­ë³€ìˆ˜ 
 double radius = 10;
 double theta = 45, phi = 45;
 
-double cam[3]; // Ä«¸Ş¶ó À§Ä¡
-double center[3] = { 0, 0, 0 }; // ¹Ù¶óº¸´Â Á¡
-double up[3] = { 0, 1, 0 }; // Ä«¸Ş¶óÀÇ Up vector
+double cam[3]; // ì¹´ë©”ë¼ ìœ„ì¹˜
+double center[3] = { 0, 0, 0 }; // ë°”ë¼ë³´ëŠ” ì 
+double up[3] = { 0, 1, 0 }; // ì¹´ë©”ë¼ì˜ Up vector
 
-// ±¸ÁÂÇ¥°è ÁöÁ¤
+// êµ¬ì¢Œí‘œê³„ ì§€ì •
 int x, y, z;
 
-/* ÃÊ±âÈ­ ¹× Display Callback ÇÔ¼ö */
+/* ì´ˆê¸°í™” ë° Display Callback í•¨ìˆ˜ */
 
-// »ç¿ëÀÚ ÃÊ±âÈ­ ÇÔ¼ö 
+// ì‚¬ìš©ì ì´ˆê¸°í™” í•¨ìˆ˜ 
 void init(void)
 {
 	printf("Init function ON\n");
-	/* È­¸éÀÇ ±âº»»öÀ¸·Î Black ¼³Á¤ */
+	/* í™”ë©´ì˜ ê¸°ë³¸ìƒ‰ìœ¼ë¡œ Black ì„¤ì • */
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
-	// (0,0) ~ (500,500) 2Â÷¿ø viewport »ı¼º
+	// (0,0) ~ (500,500) 2ì°¨ì› viewport ìƒì„±
 	gluOrtho2D(0.0f, 500.0f, 0.0f, 500.0f);
 
 	// Alpha-Blendign OFF
@@ -37,9 +37,9 @@ void init(void)
 }
 
 
-/* Callback ÇÔ¼ö Á¤ÀÇ */
+/* Callback í•¨ìˆ˜ ì •ì˜ */
 
-// key¿¡ µû¸¥ phi, theta °ª º¯°æ by Å°º¸µå ÀÔ·Â
+// keyì— ë”°ë¥¸ phi, theta ê°’ ë³€ê²½ by í‚¤ë³´ë“œ ì…ë ¥
 void special_keyboard(int key, int x, int y)
 {
 	if (key == GLUT_KEY_LEFT)
@@ -69,55 +69,55 @@ void special_keyboard(int key, int x, int y)
 
 	cout << "theta : " << theta << ", phi : " << phi << endl;
 
-	// È­¸é Àç»ı¼º - ½Ç½Ã°£ ¹İ¿µ
+	// í™”ë©´ ì¬ìƒì„± - ì‹¤ì‹œê°„ ë°˜ì˜
 	glutPostRedisplay();
 }
 
 
-/* WM_SIZEÀÇ ¸Ş½ÃÁö Ã³¸®¸¦ À§ÇÑ callback ÇÔ¼ö */
-// À©µµ¿ì »ı¼º ¹× Å©±â º¯È­½Ã WM_SIZE ¸Ş½ÃÁö ¹ß»ı
+/* WM_SIZEì˜ ë©”ì‹œì§€ ì²˜ë¦¬ë¥¼ ìœ„í•œ callback í•¨ìˆ˜ */
+// ìœˆë„ìš° ìƒì„± ë° í¬ê¸° ë³€í™”ì‹œ WM_SIZE ë©”ì‹œì§€ ë°œìƒ
 
-// Viewport TF¿Í Projection TF ±¸Çö
-// -> resize ÇÔ¼ö (WM_SIZE Ã³¸®)¿¡¼­ (= glutReshapeFunc)
+// Viewport TFì™€ Projection TF êµ¬í˜„
+// -> resize í•¨ìˆ˜ (WM_SIZE ì²˜ë¦¬)ì—ì„œ (= glutReshapeFunc)
 void resize(int width, int height)
 {
 	// Viewport TF
-	glViewport(0, 0, width, height); // À©µµ¿ì Å©±â º¯È­½Ã viewport Àç¼³Á¤
-	printf("Window Change! Resize function ON\n"); // ¸Ş½ÃÁö Ãâ·Â È®ÀÎ¿ë
-	/* È­¸é ÁÂÇ¥ Á¤º¸ ¼³Á¤ */
-	glMatrixMode(GL_PROJECTION); // Åõ»ó ÁÂÇ¥°è ¼±¾ğ -> Projection TF °¡´ÉÇÏµµ·Ï
-	glLoadIdentity(); // ÁÂÇ¥°è ÃÊ±âÈ­
+	glViewport(0, 0, width, height); // ìœˆë„ìš° í¬ê¸° ë³€í™”ì‹œ viewport ì¬ì„¤ì •
+	printf("Window Change! Resize function ON\n"); // ë©”ì‹œì§€ ì¶œë ¥ í™•ì¸ìš©
+	/* í™”ë©´ ì¢Œí‘œ ì •ë³´ ì„¤ì • */
+	glMatrixMode(GL_PROJECTION); // íˆ¬ìƒ ì¢Œí‘œê³„ ì„ ì–¸ -> Projection TF ê°€ëŠ¥í•˜ë„ë¡
+	glLoadIdentity(); // ì¢Œí‘œê³„ ì´ˆê¸°í™”
 
 	// Projection TF
 	gluPerspective(45, (float)width / (float)height, 1, 500);
 
-	glMatrixMode(GL_MODELVIEW); // Projection ¼³Á¤ ÈÄ È¯¿ø
+	glMatrixMode(GL_MODELVIEW); // Projection ì„¤ì • í›„ í™˜ì›
 }
 
-/* xyz ÁÂÇ¥°è ±×¸®±â ÇÔ¼ö */
+/* xyz ì¢Œí‘œê³„ ê·¸ë¦¬ê¸° í•¨ìˆ˜ */
 void draw_axis(void)
 {
-	// ÁÂÇ¥Ãà µÎ²²
+	// ì¢Œí‘œì¶• ë‘ê»˜
 	glLineWidth(3);
 	glBegin(GL_LINES);
-	glColor3f(1, 0, 0); // XÃàÀº red
+	glColor3f(1, 0, 0); // Xì¶•ì€ red
 	glVertex3f(0, 0, 0);
 	glVertex3f(4, 0, 0);
 
-	glColor3f(0, 1, 0); // YÃàÀº green
+	glColor3f(0, 1, 0); // Yì¶•ì€ green
 	glVertex3f(0, 0, 0);
 	glVertex3f(0, 4, 0);
 
-	glColor3f(0, 0, 1); // ZÃàÀº blue
+	glColor3f(0, 0, 1); // Zì¶•ì€ blue
 	glVertex3f(0, 0, 0);
 	glVertex3f(0, 0, 4);
 	glEnd();
-	// µÎ²² ´Ù½Ã È¯¿ø
+	// ë‘ê»˜ ë‹¤ì‹œ í™˜ì›
 	glLineWidth(1);
 }
 
-// Display Callback ÇÔ¼ö
-// draw ÇÔ¼ö È£Ãâ Àü¿¡ resize() È£ÃâµÊ -> Viewport & Projection TF ³¡³­ »óÅÂ
+// Display Callback í•¨ìˆ˜
+// draw í•¨ìˆ˜ í˜¸ì¶œ ì „ì— resize() í˜¸ì¶œë¨ -> Viewport & Projection TF ëë‚œ ìƒíƒœ
 // -> Viewing TF ON
 void draw(void)
 {
@@ -125,12 +125,12 @@ void draw(void)
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity(); // ´ÜÀ§Çà·Ä·Î 
+	glLoadIdentity(); // ë‹¨ìœ„í–‰ë ¬ë¡œ 
 
 	// Viewing TF (World -> Camera Coordinate)
-	// cam, center, up -> Å°º¸µå ÀÔ·ÂÀ» ¹ŞÀÚ
+	// cam, center, up -> í‚¤ë³´ë“œ ì…ë ¥ì„ ë°›ì
 	// gluLookAt(5, 0, -10, 0, 0, 0, 0, 1, 0); 
-	// -> (10,10,10)¿¡¼­ (0,0,0) ¹Ù¶óº¸´Â Viewing TF
+	// -> (10,10,10)ì—ì„œ (0,0,0) ë°”ë¼ë³´ëŠ” Viewing TF
 
 	x = radius * sin(theta) * cos(phi);
 	y = radius * sin(theta) * cos(theta);
@@ -139,42 +139,42 @@ void draw(void)
 	gluLookAt(x, y, z, 0, 0, 0, 0, 1, 0);
 
 
-	// Teapot ±×¸®±â
+	// Teapot ê·¸ë¦¬ê¸°
 	glColor3f(1, 1, 0);
 	glutWireTeapot(4);
-	draw_axis(); // ÁÂÇ¥°è
+	draw_axis(); // ì¢Œí‘œê³„
 
 
-	/* ±×¸®±â ¸í·ÉÀ» ¹Ù·Î ±×·¡ÇÈ Ä«µå·Î º¸³¿*/
-	glFlush(); // Buffer¿¡ ¸í·ÉÀ» ¸ğ¾ÆµĞ ÈÄ¿¡ ÇÑ¹ø¿¡ ¼öÇà
-	glutSwapBuffers(); // Double Buffering½Ã Buffer Swap
+	/* ê·¸ë¦¬ê¸° ëª…ë ¹ì„ ë°”ë¡œ ê·¸ë˜í”½ ì¹´ë“œë¡œ ë³´ëƒ„*/
+	glFlush(); // Bufferì— ëª…ë ¹ì„ ëª¨ì•„ë‘” í›„ì— í•œë²ˆì— ìˆ˜í–‰
+	glutSwapBuffers(); // Double Bufferingì‹œ Buffer Swap
 }
 
 
-/* ÇÑ¹ø¿¡ clearÇÏ´Â ÇÔ¼ö -> ¸Ş´º µû·Î ¸¸µé¾îÁÜ */
+/* í•œë²ˆì— clearí•˜ëŠ” í•¨ìˆ˜ -> ë©”ë‰´ ë”°ë¡œ ë§Œë“¤ì–´ì¤Œ */
 void clear(void)
 {
-	/* È­¸é ±ú²ıÇÏ°Ô Áö¿ì±â */
+	/* í™”ë©´ ê¹¨ë—í•˜ê²Œ ì§€ìš°ê¸° */
 	glClear(GL_COLOR_BUFFER_BIT);
 }
 
 
-/* GLUT - Å°º¸µå ÀÔ·Â Ã³¸® */
+/* GLUT - í‚¤ë³´ë“œ ì…ë ¥ ì²˜ë¦¬ */
 
-// Callback ÇÔ¼ö keyboard
+// Callback í•¨ìˆ˜ keyboard
 void keyboard(unsigned char key, int x, int y)
 {
 	printf("You pressed %c\n", key);
 
-	// È­¸é Àç»ı¼º - ½Ç½Ã°£ ¹İ¿µ
+	// í™”ë©´ ì¬ìƒì„± - ì‹¤ì‹œê°„ ë°˜ì˜
 	glutPostRedisplay();
 }
 
 
-// ¸¶¿ì½º ÈÙ º¯È­ Callback ÇÔ¼ö
+// ë§ˆìš°ìŠ¤ íœ  ë³€í™” Callback í•¨ìˆ˜
 
 
-/* GLUT - ¸Ş´º Ãß°¡ */
+/* GLUT - ë©”ë‰´ ì¶”ê°€ */
 
 void main_menu_function(int option)
 {
@@ -192,31 +192,31 @@ void main_menu_function(int option)
 		break;
 	}
 
-	// È­¸é Àç»ı¼º - ½Ç½Ã°£ ¹İ¿µ
+	// í™”ë©´ ì¬ìƒì„± - ì‹¤ì‹œê°„ ë°˜ì˜
 	glutPostRedisplay();
 }
 
 
 int main(int argc, char** argv)
 {
-	int submenu1; // ¸Ş´º ¸¸µé±â
+	int submenu1; // ë©”ë‰´ ë§Œë“¤ê¸°
 
-	/* Window ÃÊ±âÈ­ */
+	/* Window ì´ˆê¸°í™” */
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGBA);
 	glutInitWindowSize(500, 500);
 	glutInitWindowPosition(300, 300);
-	glutCreateWindow("12181761_±èÇöÁ¶_Lab06 GL");
+	glutCreateWindow("12181761_ê¹€í˜„ì¡°_Lab06 GL");
 
-	init(); // »ç¿ëÀÚ ÃÊ±âÈ­ ÇÔ¼ö
+	init(); // ì‚¬ìš©ì ì´ˆê¸°í™” í•¨ìˆ˜
 
 
-	/* Callback ÇÔ¼ö Á¤ÀÇ */
-	glutDisplayFunc(draw); // draw: ½ÇÁ¦ ±×¸®±â ÇÔ¼ö
-	glutKeyboardFunc(keyboard); // keyboard ÇÔ¼ö ¸¸µé¾îÁÖÀÚ
+	/* Callback í•¨ìˆ˜ ì •ì˜ */
+	glutDisplayFunc(draw); // draw: ì‹¤ì œ ê·¸ë¦¬ê¸° í•¨ìˆ˜
+	glutKeyboardFunc(keyboard); // keyboard í•¨ìˆ˜ ë§Œë“¤ì–´ì£¼ì
 
-	glutReshapeFunc(resize); // WM_SIZE Ã³¸®ÇÏ´Â Callback ÇÔ¼ö resize ÁöÁ¤
-	glutSpecialFunc(special_keyboard); // Å°º¸µå ÀÔ·ÂÀ¸·Î ½ÃÁ¡ Á¶Á¤
+	glutReshapeFunc(resize); // WM_SIZE ì²˜ë¦¬í•˜ëŠ” Callback í•¨ìˆ˜ resize ì§€ì •
+	glutSpecialFunc(special_keyboard); // í‚¤ë³´ë“œ ì…ë ¥ìœ¼ë¡œ ì‹œì  ì¡°ì •
 
 	glutCreateMenu(main_menu_function);
 
@@ -224,8 +224,8 @@ int main(int argc, char** argv)
 	glutAddMenuEntry("Quit", 999);
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
 
-	/* Looping ½ÃÀÛ */
-	glutMainLoop(); // °¡Àå ¸¶Áö¸·¿¡ ¿Àµµ·Ï...!
+	/* Looping ì‹œì‘ */
+	glutMainLoop(); // ê°€ì¥ ë§ˆì§€ë§‰ì— ì˜¤ë„ë¡...!
 
 	return 0;
 }

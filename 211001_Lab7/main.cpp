@@ -1,299 +1,231 @@
-#include <gl/glut.h> //OpenGLÀ» »ç¿ëÇÏ±â À§ÇØ À©µµ¿ì ½Ã½ºÅÛ°ú ¿¬°áÇÏ´Â ÇÔ¼öµé
+#include <gl/glut.h> //OpenGLì„ ì‚¬ìš©í•˜ê¸° ìœ„í•´ ìœˆë„ìš° ì‹œìŠ¤í…œê³¼ ì—°ê²°í•˜ëŠ” í•¨ìˆ˜ë“¤
 #include <stdio.h>
 #include <iostream>
 using namespace std;
 
-#include <string.h> // Character Ãâ·Â - strlen ÇÔ¼ö
-#include <math.h>
+#include <string.h> // Character ì¶œë ¥ - strlen í•¨ìˆ˜
 
-// Á¡ Âï±â ÁÂÇ¥ Àü¿ªº¯¼ö
-int pointX, pointY;
+// íƒœì–‘ì˜ ìì „ì„ ì˜ë¯¸í•˜ëŠ” ì „ì—­ë³€ìˆ˜ 
+float SunRot = 0;
 
-// Ä«¸Ş¶ó ÁÂÇ¥ -> ±¸ÁÂÇ¥°è¸¦ À§ÇÑ Àü¿ªº¯¼ö 
-double radius = 10;
-double theta = 45, phi = 45;
+// ì§€êµ¬ì˜ ìì „ê³¼ ê³µì „ì„ ì˜ë¯¸í•˜ëŠ” ì „ì—­ë³€ìˆ˜ 
+float EarthRot = 0;
+float EarthOrb = 0;
 
-double cam[3]; // Ä«¸Ş¶ó À§Ä¡
-double center[3] = { 0, 0, 0 }; // ¹Ù¶óº¸´Â Á¡
-double up[3] = { 0, 1, 0 }; // Ä«¸Ş¶óÀÇ Up vector
+// í™”ì„±ì˜ ìì „ê³¼ ê³µì „ì„ ì˜ë¯¸í•˜ëŠ” ì „ì—­ë³€ìˆ˜ 
+float MarsRot = 0;
+float MarsOrb = 0;
 
-// ±¸ÁÂÇ¥°è ÁöÁ¤
-int x, y, z;
+// ë‹¬ì˜ ìì „ê³¼ ê³µì „ì„ ì˜ë¯¸í•˜ëŠ” ì „ì—­ë³€ìˆ˜ 
+float MoonRot = 0;
+float MoonOrb = 0;
 
-// Áö±¸ÀÇ ÀÚÀü°ú °øÀüÀ» ÀÇ¹ÌÇÏ´Â Àü¿ªº¯¼ö 
-float EarthAngle1 = 0;
-float EarthAngle2 = 0;
-
-// È­¼ºÀÇ ÀÚÀü°ú °øÀüÀ» ÀÇ¹ÌÇÏ´Â Àü¿ªº¯¼ö 
-float MarsAngle1 = 0;
-float MarsAngle2 = 0;
-
-// ´ŞÀÇ ÀÚÀü°ú °øÀüÀ» ÀÇ¹ÌÇÏ´Â Àü¿ªº¯¼ö 
-float MoonAngle1 = 0;
-float MoonAngle2 = 0;
+// ëª©ì„±ì˜ ìì „ê³¼ ê³µì „ì„ ì˜ë¯¸í•˜ëŠ” ì „ì—­ë³€ìˆ˜ 
+float JupiterRot = 0;
+float JupiterOrb = 0;
 
 
+/* ì´ˆê¸°í™” ë° Display Callback í•¨ìˆ˜ */
 
-/* ÃÊ±âÈ­ ¹× Display Callback ÇÔ¼ö */
-
-// »ç¿ëÀÚ ÃÊ±âÈ­ ÇÔ¼ö 
+// ì‚¬ìš©ì ì´ˆê¸°í™” í•¨ìˆ˜ 
 void init(void)
 {
 	printf("Init function ON\n");
-	/* È­¸éÀÇ ±âº»»öÀ¸·Î Black ¼³Á¤ */
+	/* í™”ë©´ì˜ ê¸°ë³¸ìƒ‰ìœ¼ë¡œ Black ì„¤ì • */
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
-	// (0,0) ~ (500,500) 2Â÷¿ø viewport »ı¼º
+	// (0,0) ~ (500,500) 2ì°¨ì› viewport ìƒì„±
 	gluOrtho2D(0.0f, 500.0f, 0.0f, 500.0f);
 
 	// Alpha-Blendign OFF
 	glDisable(GL_BLEND);
 
-	// °¢µµ ÃÊ±âÈ­
-	EarthAngle1 = 0;
-	EarthAngle2 = 0;
-	MarsAngle1 = 0;
-	MarsAngle2 = 0;
-	MoonAngle1 = 0;
-	MoonAngle2 = 0;
+	// ê°ë„ ì´ˆê¸°í™”
+	EarthRot = 0;
+	EarthOrb = 0;
+	MarsRot = 0;
+	MarsOrb = 0;
+	MoonRot = 0;
+	MoonOrb = 0;
+	JupiterRot = 0;
+	JupiterOrb = 0;
 }
 
 
-/* Callback ÇÔ¼ö Á¤ÀÇ */
+/* Callback í•¨ìˆ˜ ì •ì˜ */
 
-// Angle º¯È­½ÃÅ°´Â ÇÔ¼ö
+// Angle ë³€í™”ì‹œí‚¤ëŠ” í•¨ìˆ˜
 void idle(void)
 {
-	// Áö±¸
-	EarthAngle1 = EarthAngle1 + 0.1;
-	if (EarthAngle1 > 360) EarthAngle1 -= 360;
-	EarthAngle2 = EarthAngle2 + 3;
-	if (EarthAngle2 > 360) EarthAngle2 -= 360;
+	// íƒœì–‘ ìì „
+	SunRot = SunRot + .05;
+	if (SunRot > 360) SunRot -= 360;
+	
+	// ì§€êµ¬ ê³µì „ê³¼ ìì „
+	EarthOrb = EarthOrb + .01;
+	if (EarthOrb > 360) EarthOrb -= 360;
+	EarthRot = EarthRot + .03;
+	if (EarthRot > 360) EarthRot -= 360;
 
-	// È­¼º
-	MarsAngle1 = MarsAngle1 + 0.5;
-	if (MarsAngle1 > 360) MarsAngle1 -= 360;
-	MarsAngle2 = MarsAngle2 + 6;
-	if (MarsAngle2 > 360) MarsAngle2 -= 360;
+	// í™”ì„± ê³µì „ê³¼ ìì „
+	MarsOrb = MarsOrb + 0.008;
+	if (MarsOrb > 360) MarsOrb -= 360;
+	MarsRot = MarsRot + .015;
+	if (MarsRot > 360) MarsRot -= 360;
 
-	// ´Ş
-	MoonAngle1 = MoonAngle1 + 0.1;
-	if (MoonAngle1 > 360) MoonAngle1 -= 360;
-	MoonAngle2 = MoonAngle2 + 0.5;
-	if (MoonAngle2 > 360) MoonAngle2 -= 360;
+	// ë‹¬ ê³µì „ê³¼ ìì „
+	MoonOrb = MoonOrb + 0.1;
+	if (MoonOrb > 360) MoonOrb -= 360;
+	MoonRot = MoonRot + 0.005;
+	if (MoonRot > 360) MoonRot -= 360;
+
+	// ëª©ì„± ê³µì „0.5ê³¼ ìì „ 20
+	JupiterOrb = JupiterOrb + 0.05;
+	if (JupiterOrb > 360) JupiterOrb -= 360;
+	JupiterRot = JupiterRot + 0.002;
+	if (JupiterRot > 360) JupiterRot -= 360;
 
 	glutPostRedisplay();
 }
 
-// key¿¡ µû¸¥ phi, theta °ª º¯°æ by Å°º¸µå ÀÔ·Â
-void special_keyboard(int key, int x, int y)
-{
-	if (key == GLUT_KEY_LEFT)
-	{
-		phi -= 5;
-		if (phi < 0) phi = 355;
-		printf("Got Left_KEY\n");
-	}
-	if (key == GLUT_KEY_RIGHT)
-	{
-		phi += 5;
-		if (phi >= 360) phi = 0;
-		printf("Got Right_KEY\n");
-	}
-	else if (key == GLUT_KEY_UP)
-	{
-		theta -= 5;
-		if (theta <= 0) theta = 360;
-		printf("Got Up_KEY\n");
-	}
-	else if (key == GLUT_KEY_DOWN)
-	{
-		theta += 5;
-		if (theta > 360) theta = 5;
-		printf("Got Down_KEY\n");
-	}
+/* WM_SIZEì˜ ë©”ì‹œì§€ ì²˜ë¦¬ë¥¼ ìœ„í•œ callback í•¨ìˆ˜ */
+// ìœˆë„ìš° ìƒì„± ë° í¬ê¸° ë³€í™”ì‹œ WM_SIZE ë©”ì‹œì§€ ë°œìƒ
 
-	cout << "theta : " << theta << ", phi : " << phi << endl;
-
-	// È­¸é Àç»ı¼º - ½Ç½Ã°£ ¹İ¿µ
-	glutPostRedisplay();
-}
-
-
-/* WM_SIZEÀÇ ¸Ş½ÃÁö Ã³¸®¸¦ À§ÇÑ callback ÇÔ¼ö */
-// À©µµ¿ì »ı¼º ¹× Å©±â º¯È­½Ã WM_SIZE ¸Ş½ÃÁö ¹ß»ı
-
-// Viewport TF¿Í Projection TF ±¸Çö
-// -> resize ÇÔ¼ö (WM_SIZE Ã³¸®)¿¡¼­ (= glutReshapeFunc)
+// Viewport TFì™€ Projection TF êµ¬í˜„
+// -> resize í•¨ìˆ˜ (WM_SIZE ì²˜ë¦¬)ì—ì„œ (= glutReshapeFunc)
 void resize(int width, int height)
 {
 	// Viewport TF
-	glViewport(0, 0, width, height); // À©µµ¿ì Å©±â º¯È­½Ã viewport Àç¼³Á¤
-	printf("Window Change! Resize function ON\n"); // ¸Ş½ÃÁö Ãâ·Â È®ÀÎ¿ë
-	/* È­¸é ÁÂÇ¥ Á¤º¸ ¼³Á¤ */
-	glMatrixMode(GL_PROJECTION); // Åõ»ó ÁÂÇ¥°è ¼±¾ğ -> Projection TF °¡´ÉÇÏµµ·Ï
-	glLoadIdentity(); // ÁÂÇ¥°è ÃÊ±âÈ­
+	glViewport(0, 0, width, height); // ìœˆë„ìš° í¬ê¸° ë³€í™”ì‹œ viewport ì¬ì„¤ì •
+	printf("Window Change! Resize function ON\n"); // ë©”ì‹œì§€ ì¶œë ¥ í™•ì¸ìš©
+	/* í™”ë©´ ì¢Œí‘œ ì •ë³´ ì„¤ì • */
+	glMatrixMode(GL_PROJECTION); // íˆ¬ìƒ ì¢Œí‘œê³„ ì„ ì–¸ -> Projection TF ê°€ëŠ¥í•˜ë„ë¡
+	glLoadIdentity(); // ì¢Œí‘œê³„ ì´ˆê¸°í™”
 
 	// Projection TF
 	gluPerspective(45, (float)width / (float)height, 1, 500);
 
-	glMatrixMode(GL_MODELVIEW); // Projection ¼³Á¤ ÈÄ È¯¿ø
+	glMatrixMode(GL_MODELVIEW); // Projection ì„¤ì • í›„ í™˜ì›
 }
 
-/* xyz ÁÂÇ¥°è ±×¸®±â ÇÔ¼ö */
+
+/* xyz ì¢Œí‘œê³„ ê·¸ë¦¬ê¸° í•¨ìˆ˜ */
 void draw_axis(void)
 {
-	// ÁÂÇ¥Ãà µÎ²²
+	// ì¢Œí‘œì¶• ë‘ê»˜
 	glLineWidth(3);
 	glBegin(GL_LINES);
-	glColor3f(1, 0, 0); // XÃàÀº red
+	glColor3f(1, 0, 0); // Xì¶•ì€ red
 	glVertex3f(0, 0, 0);
 	glVertex3f(4, 0, 0);
 
-	glColor3f(0, 1, 0); // YÃàÀº green
+	glColor3f(0, 1, 0); // Yì¶•ì€ green
 	glVertex3f(0, 0, 0);
 	glVertex3f(0, 4, 0);
 
-	glColor3f(0, 0, 1); // ZÃàÀº blue
+	glColor3f(0, 0, 1); // Zì¶•ì€ blue
 	glVertex3f(0, 0, 0);
 	glVertex3f(0, 0, 4);
 	glEnd();
-	// µÎ²² ´Ù½Ã È¯¿ø
+	// ë‘ê»˜ ë‹¤ì‹œ í™˜ì›
 	glLineWidth(1);
 }
 
-// Display Callback ÇÔ¼ö
-// draw ÇÔ¼ö È£Ãâ Àü¿¡ resize() È£ÃâµÊ -> Viewport & Projection TF ³¡³­ »óÅÂ
+
+// Display Callback í•¨ìˆ˜
+// draw í•¨ìˆ˜ í˜¸ì¶œ ì „ì— resize() í˜¸ì¶œë¨ -> Viewport & Projection TF ëë‚œ ìƒíƒœ
 // -> Viewing TF ON
 void draw(void)
 {
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity(); // ´ÜÀ§Çà·Ä·Î 
+	glLoadIdentity(); // í˜„ì¬ í™œì„±í™”ëœ í–‰ë ¬ì„ ë‹¨ìœ„í–‰ë ¬ë¡œ ì´ˆê¸°í™”
 
 	// Viewing TF (World -> Camera Coordinate)
-	// cam, center, up -> Å°º¸µå ÀÔ·ÂÀ» ¹ŞÀÚ
-	// ½ÃÁ¡ °íÁ¤
-	// (10,10,10)¿¡¼­ (0,0,0) ¹Ù¶óº¸´Â Viewing TF
-	gluLookAt(10, 10, 10, 0, 0, 0, 0, 1, 0);
+	// ì‹œì  ê³ ì •
+	// (20,20,20)ì—ì„œ (0,0,0) ë°”ë¼ë³´ëŠ” Viewing TF
+	gluLookAt(20, 20, 20, 0, 0, 0, 0, 1, 0);
 
-	// ÅÂ¾ç ±×¸®±â
+	// íƒœì–‘ ê·¸ë¦¬ê¸°
+	glRotatef(SunRot, 0, 1, 0); // ìì „
+
 	glColor3f(0.7, 0.3, 0);
-	glutWireSphere(5,50,50); // Á¶±³´ÔÀÌ 2,3¹øÂ° ÀÎÀÚ ¾Ë·ÁÁÖ½É
-	draw_axis(); // World ÁÂÇ¥°è
+	glutWireSphere(5,50,50); // ì¡°êµë‹˜ì´ 2,3ë²ˆì§¸ ì¸ì ì•Œë ¤ì£¼ì‹¬
+	draw_axis(); // World ì¢Œí‘œê³„
 
-	glPushMatrix(); // ÇöÀç Matrix¸¦ Stack¿¡ ÀúÀå
+	glPushMatrix(); // í˜„ì¬ Matrixë¥¼ Stackì— ì €ì¥
 
-	// Áö±¸ ±×¸®±â
-	glRotatef(EarthAngle1, 0, 1, 0); // °øÀü
-	glTranslatef(5, 0, 0); // Áß½ÉÀ¸·ÎºÎÅÍ ÀÌµ¿
-	glRotatef(EarthAngle2, 0, 1, 0); // ÀÚÀü
+	// ì§€êµ¬ ê·¸ë¦¬ê¸°
+	glRotatef(EarthOrb, 0, 1, 0); // ê³µì „
+	glTranslatef(8, 0, 0); // ì¤‘ì‹¬ìœ¼ë¡œë¶€í„° ì´ë™
+	glRotatef(EarthRot, 0, 1, 0); // ìì „
 
 	glColor3f(0, 0, 1);
-	glutWireSphere(2,50,50);
+	glutWireSphere(1.6,50,50);
 
-	// Pop ¾øÀÌ ¹Ù·Î °øÀüÇÏ´Â Çà¼ºÀ» ±×¸²
-	// ´Ş ±×¸®±â
-	glRotatef(MoonAngle1, 0, 1, 0);
-	glTranslatef(2, 0, 0);
-	glRotatef(MoonAngle2, 0, 1, 0);
+	// Pop ì—†ì´ ë°”ë¡œ ê³µì „í•˜ëŠ” í–‰ì„±ì„ ê·¸ë¦¼
+	// ë‹¬ ê·¸ë¦¬ê¸°
+	glRotatef(MoonOrb, 0, 1, 0); // ê³µì „
+	glTranslatef(3, 0, 0);
+	glRotatef(MoonRot, 0, 1, 0); // ìì „
 
 	glColor3f(0.3, 0.3, 0.3);
 	glutWireSphere(0.5, 50, 50);
 
-	glPopMatrix(); // ÅÂ¾ç¸¸ ±×·È´ø »óÃ¤·Î Çà·Ä º¹±Í
+	glPopMatrix(); // íƒœì–‘ë§Œ ê·¸ë ¸ë˜ ìƒíƒœë¡œ í–‰ë ¬ ë³µê·€
 
-	// È­¼º ±×¸®±â
-	glRotatef(MarsAngle1, 0, 1, 0);
-	glTranslatef(8, 0, 0);
-	glRotatef(MarsAngle2, 0, 1, 0);
+	// í™”ì„± ê·¸ë¦¬ê¸°
+	glRotatef(MarsOrb, 0, 1, 0); // ê³µì „
+	glTranslatef(15, 0, 0);
+	glRotatef(MarsRot, 0, 1, 0); // ìì „
 
 	glColor3f(1, 0, 0);
 	glutWireSphere(1.2, 50, 50);
 
-	/* ±×¸®±â ¸í·ÉÀ» ¹Ù·Î ±×·¡ÇÈ Ä«µå·Î º¸³¿*/
-	glFlush(); // Buffer¿¡ ¸í·ÉÀ» ¸ğ¾ÆµĞ ÈÄ¿¡ ÇÑ¹ø¿¡ ¼öÇà
-	glutSwapBuffers(); // Double Buffering½Ã Buffer Swap
+	glPopMatrix(); // íƒœì–‘ë§Œ ê·¸ë ¸ë˜ ìƒíƒœë¡œ í–‰ë ¬ ë³µê·€
+
+	// ëª©ì„± ê·¸ë¦¬ê¸°
+	glRotatef(JupiterOrb, 0, 1, 0); // ê³µì „
+	glTranslatef(25, 0, 0);
+	glRotatef(JupiterRot, 0, 1, 0); // ìì „
+
+	glColor3f(0, 1, 0);
+	glutWireSphere(3, 50, 50);
+
+	/* ê·¸ë¦¬ê¸° ëª…ë ¹ì„ ë°”ë¡œ ê·¸ë˜í”½ ì¹´ë“œë¡œ ë³´ëƒ„*/
+	glFlush(); // Bufferì— ëª…ë ¹ì„ ëª¨ì•„ë‘” í›„ì— í•œë²ˆì— ìˆ˜í–‰
+	glutSwapBuffers(); // Double Bufferingì‹œ Buffer Swap
 }
 
 
-/* ÇÑ¹ø¿¡ clearÇÏ´Â ÇÔ¼ö -> ¸Ş´º µû·Î ¸¸µé¾îÁÜ */
+/* í•œë²ˆì— clearí•˜ëŠ” í•¨ìˆ˜ -> ë©”ë‰´ ë”°ë¡œ ë§Œë“¤ì–´ì¤Œ */
 void clear(void)
 {
-	/* È­¸é ±ú²ıÇÏ°Ô Áö¿ì±â */
+	/* í™”ë©´ ê¹¨ë—í•˜ê²Œ ì§€ìš°ê¸° */
 	glClear(GL_COLOR_BUFFER_BIT);
-}
-
-
-/* GLUT - Å°º¸µå ÀÔ·Â Ã³¸® */
-
-// Callback ÇÔ¼ö keyboard
-void keyboard(unsigned char key, int x, int y)
-{
-	printf("You pressed %c\n", key);
-
-	// È­¸é Àç»ı¼º - ½Ç½Ã°£ ¹İ¿µ
-	glutPostRedisplay();
-}
-
-
-// ¸¶¿ì½º ÈÙ º¯È­ Callback ÇÔ¼ö
-
-
-/* GLUT - ¸Ş´º Ãß°¡ */
-
-void main_menu_function(int option)
-{
-	printf("Main menu %d has been selected\n", option);
-
-	switch (option)
-	{
-	case 831:
-		printf("Lets Clear this window!\n");
-		clear();
-		break;
-
-	case 999:
-		exit(0);
-		break;
-	}
-
-	// È­¸é Àç»ı¼º - ½Ç½Ã°£ ¹İ¿µ
-	glutPostRedisplay();
 }
 
 
 int main(int argc, char** argv)
 {
-	int submenu1; // ¸Ş´º ¸¸µé±â
-
-	/* Window ÃÊ±âÈ­ */
+	/* Window ì´ˆê¸°í™” */
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGBA);
 	glutInitWindowSize(500, 500);
 	glutInitWindowPosition(300, 300);
-	glutCreateWindow("12181761_±èÇöÁ¶_Lab06 GL");
+	glutCreateWindow("12181761_ê¹€í˜„ì¡°_Lab07 GL");
 
-	init(); // »ç¿ëÀÚ ÃÊ±âÈ­ ÇÔ¼ö
+	init(); // ì‚¬ìš©ì ì´ˆê¸°í™” í•¨ìˆ˜
 
 
-	/* Callback ÇÔ¼ö Á¤ÀÇ */
-	glutIdleFunc(idle); // ÀÚÀü°ú °øÀü °¢µµ Á¶Àı ÇÔ¼ö
-	glutDisplayFunc(draw); // draw: ½ÇÁ¦ ±×¸®±â ÇÔ¼ö
-	glutKeyboardFunc(keyboard); // keyboard ÇÔ¼ö ¸¸µé¾îÁÖÀÚ
+	/* Callback í•¨ìˆ˜ ì •ì˜ */
+	glutIdleFunc(idle); // ìì „ê³¼ ê³µì „ ê°ë„ ì¡°ì ˆ í•¨ìˆ˜
+	glutDisplayFunc(draw); // draw: ì‹¤ì œ ê·¸ë¦¬ê¸° í•¨ìˆ˜
+	glutReshapeFunc(resize); // WM_SIZE ì²˜ë¦¬í•˜ëŠ” Callback í•¨ìˆ˜ resize ì§€ì •
 
-	glutReshapeFunc(resize); // WM_SIZE Ã³¸®ÇÏ´Â Callback ÇÔ¼ö resize ÁöÁ¤
-	glutSpecialFunc(special_keyboard); // Å°º¸µå ÀÔ·ÂÀ¸·Î ½ÃÁ¡ Á¶Á¤
-
-	glutCreateMenu(main_menu_function);
-
-	glutAddMenuEntry("Clear", 831);
-	glutAddMenuEntry("Quit", 999);
-	glutAttachMenu(GLUT_RIGHT_BUTTON);
-
-	/* Looping ½ÃÀÛ */
-	glutMainLoop(); // °¡Àå ¸¶Áö¸·¿¡ ¿Àµµ·Ï...!
+	/* Looping ì‹œì‘ */
+	glutMainLoop(); // ê°€ì¥ ë§ˆì§€ë§‰ì— ì˜¤ë„ë¡...!
 
 	return 0;
 }
