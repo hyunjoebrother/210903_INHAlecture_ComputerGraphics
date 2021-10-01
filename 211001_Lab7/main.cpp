@@ -2,8 +2,8 @@
 #include <stdio.h>
 #include <iostream>
 using namespace std;
-// Character 출력 - strlen 함수
-#include <string.h>
+
+#include <string.h> // Character 출력 - strlen 함수
 #include <math.h>
 
 // 점 찍기 좌표 전역변수
@@ -20,6 +20,20 @@ double up[3] = { 0, 1, 0 }; // 카메라의 Up vector
 // 구좌표계 지정
 int x, y, z;
 
+// 지구의 자전과 공전을 의미하는 전역변수 
+float EarthAngle1 = 0;
+float EarthAngle2 = 0;
+
+// 화성의 자전과 공전을 의미하는 전역변수 
+float MarsAngle1 = 0;
+float MarsAngle2 = 0;
+
+// 달의 자전과 공전을 의미하는 전역변수 
+float MoonAngle1 = 0;
+float MoonAngle2 = 0;
+
+
+
 /* 초기화 및 Display Callback 함수 */
 
 // 사용자 초기화 함수 
@@ -34,10 +48,42 @@ void init(void)
 
 	// Alpha-Blendign OFF
 	glDisable(GL_BLEND);
+
+	// 각도 초기화
+	EarthAngle1 = 0;
+	EarthAngle2 = 0;
+	MarsAngle1 = 0;
+	MarsAngle2 = 0;
+	MoonAngle1 = 0;
+	MoonAngle2 = 0;
 }
 
 
 /* Callback 함수 정의 */
+
+// Angle 변화시키는 함수
+void idle(void)
+{
+	// 지구
+	EarthAngle1 = EarthAngle1 + 0.1;
+	if (EarthAngle1 > 360) EarthAngle1 -= 360;
+	EarthAngle2 = EarthAngle2 + 3;
+	if (EarthAngle2 > 360) EarthAngle2 -= 360;
+
+	// 화성
+	MarsAngle1 = MarsAngle1 + 0.5;
+	if (MarsAngle1 > 360) MarsAngle1 -= 360;
+	MarsAngle2 = MarsAngle2 + 6;
+	if (MarsAngle2 > 360) MarsAngle2 -= 360;
+
+	// 달
+	MoonAngle1 = MoonAngle1 + 0.1;
+	if (MoonAngle1 > 360) MoonAngle1 -= 360;
+	MoonAngle2 = MoonAngle2 + 0.5;
+	if (MoonAngle2 > 360) MoonAngle2 -= 360;
+
+	glutPostRedisplay();
+}
 
 // key에 따른 phi, theta 값 변경 by 키보드 입력
 void special_keyboard(int key, int x, int y)
@@ -121,7 +167,6 @@ void draw_axis(void)
 // -> Viewing TF ON
 void draw(void)
 {
-	printf("Draw function ON\n");
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	glMatrixMode(GL_MODELVIEW);
@@ -129,21 +174,43 @@ void draw(void)
 
 	// Viewing TF (World -> Camera Coordinate)
 	// cam, center, up -> 키보드 입력을 받자
-	// gluLookAt(5, 0, -10, 0, 0, 0, 0, 1, 0); 
-	// -> (10,10,10)에서 (0,0,0) 바라보는 Viewing TF
+	// 시점 고정
+	// (10,10,10)에서 (0,0,0) 바라보는 Viewing TF
+	gluLookAt(10, 10, 10, 0, 0, 0, 0, 1, 0);
 
-	x = radius * sin(theta) * cos(phi);
-	y = radius * sin(theta) * cos(theta);
-	z = radius * cos(theta);
+	// 태양 그리기
+	glColor3f(0.7, 0.3, 0);
+	glutWireSphere(5,50,50); // 조교님이 2,3번째 인자 알려주심
+	draw_axis(); // World 좌표계
 
-	gluLookAt(x, y, z, 0, 0, 0, 0, 1, 0);
+	glPushMatrix(); // 현재 Matrix를 Stack에 저장
 
+	// 지구 그리기
+	glRotatef(EarthAngle1, 0, 1, 0); // 공전
+	glTranslatef(5, 0, 0); // 중심으로부터 이동
+	glRotatef(EarthAngle2, 0, 1, 0); // 자전
 
-	// Teapot 그리기
-	glColor3f(1, 1, 0);
-	glutWireTeapot(4);
-	draw_axis(); // 좌표계
+	glColor3f(0, 0, 1);
+	glutWireSphere(2,50,50);
 
+	// Pop 없이 바로 공전하는 행성을 그림
+	// 달 그리기
+	glRotatef(MoonAngle1, 0, 1, 0);
+	glTranslatef(2, 0, 0);
+	glRotatef(MoonAngle2, 0, 1, 0);
+
+	glColor3f(0.3, 0.3, 0.3);
+	glutWireSphere(0.5, 50, 50);
+
+	glPopMatrix(); // 태양만 그렸던 상채로 행렬 복귀
+
+	// 화성 그리기
+	glRotatef(MarsAngle1, 0, 1, 0);
+	glTranslatef(8, 0, 0);
+	glRotatef(MarsAngle2, 0, 1, 0);
+
+	glColor3f(1, 0, 0);
+	glutWireSphere(1.2, 50, 50);
 
 	/* 그리기 명령을 바로 그래픽 카드로 보냄*/
 	glFlush(); // Buffer에 명령을 모아둔 후에 한번에 수행
@@ -212,6 +279,7 @@ int main(int argc, char** argv)
 
 
 	/* Callback 함수 정의 */
+	glutIdleFunc(idle); // 자전과 공전 각도 조절 함수
 	glutDisplayFunc(draw); // draw: 실제 그리기 함수
 	glutKeyboardFunc(keyboard); // keyboard 함수 만들어주자
 
