@@ -1,38 +1,40 @@
-#include <gl/glut.h> //OpenGLÀ» »ç¿ëÇÏ±â À§ÇØ À©µµ¿ì ½Ã½ºÅÛ°ú ¿¬°áÇÏ´Â ÇÔ¼öµé
+#include <gl/glut.h> //OpenGLì„ ì‚¬ìš©í•˜ê¸° ìœ„í•´ ìœˆë„ìš° ì‹œìŠ¤í…œê³¼ ì—°ê²°í•˜ëŠ” í•¨ìˆ˜ë“¤
 #include <stdio.h>
 #include <iostream>
 using namespace std;
 
 
-// Àü¿ªº¯¼ö ¼±¾ğ
-double m_RotateAngle;
+// ì „ì—­ë³€ìˆ˜ ì„ ì–¸
+double m_RotateAngle = 0;
 
 
+/* ì´ˆê¸°í™” ë° Display Callback í•¨ìˆ˜ */
 
-/* ÃÊ±âÈ­ ¹× Display Callback ÇÔ¼ö */
-
-// »ç¿ëÀÚ ÃÊ±âÈ­ ÇÔ¼ö 
+// ì‚¬ìš©ì ì´ˆê¸°í™” í•¨ìˆ˜ 
 void init(void)
 {
 	printf("Init function ON\n");
-	/* È­¸éÀÇ ±âº»»öÀ¸·Î Black ¼³Á¤ */
+	/* í™”ë©´ì˜ ê¸°ë³¸ìƒ‰ìœ¼ë¡œ Black ì„¤ì • */
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
-	// (0,0) ~ (500,500) 2Â÷¿ø viewport »ı¼º
+	// (0,0) ~ (500,500) 2ì°¨ì› viewport ìƒì„±
 	gluOrtho2D(0.0f, 500.0f, 0.0f, 500.0f);
 
-	// Alpha-Blendign OFF
+	// Alpha-Blending OFF
 	glDisable(GL_BLEND);
 
-	// È°¼ºÈ­
-	glEnable(GL_CULL_FACE);
-	glCullFace(GL_BACK);
+
+	// Polygon Back-Face Culling í™œì„±í™”
+	//glEnable(GL_CULL_FACE); // í•œìª½ë©´ í‘œì‹œë¥¼ ìœ íš¨í•˜ë„ë¡
+	glCullFace(GL_BACK); // ë’·ë©´ì„ ê·¸ë¦¬ì§€ ì•Šë„ë¡
+
+	// Teapot ë‚´ë¶€ WireFrameìœ¼ë¡œ í‘œí˜„
+	glPolygonMode(GL_BACK, GL_LINE);
 
 
-	glClearDepth(1.0f);
+	m_RotateAngle = 0;
 
-
-	// Shaded Rendering ÃÊ±âÈ­
+	// Shaded Rendering ì´ˆê¸°í™”
 	GLfloat ambientLight[] = { 0.2f, 0.2f, 0.2f, 1.0f };
 	GLfloat diffuseLight[] = { 0.7f, 0.7f, 0.7f, 1.0f };
 	GLfloat specularLight[] = { 0.9f, 0.9f, 0.9f, 1.0f };
@@ -51,110 +53,136 @@ void init(void)
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
 
+
 	// Depth-Test Enable
-	glFrontFace(GL_CW); // TeapotÀº CW·Î Á¤ÀÇµÊ
-	glEnable(GL_DEPTH_TEST);
+	glClearDepth(1.0f); // Buffering Clearing ê°’
+
+	glFrontFace(GL_CW); // Teapotì€ CWë¡œ ì •ì˜ë¨
+	glEnable(GL_DEPTH_TEST); // Depth Buffer í™œì„±í™”
 }
 
 
-/* Callback ÇÔ¼ö Á¤ÀÇ */
+/* Callback í•¨ìˆ˜ ì •ì˜ */
 
-/* WM_SIZEÀÇ ¸Ş½ÃÁö Ã³¸®¸¦ À§ÇÑ callback ÇÔ¼ö */
-// À©µµ¿ì »ı¼º ¹× Å©±â º¯È­½Ã WM_SIZE ¸Ş½ÃÁö ¹ß»ı
+/* Rotate Angle ë³€í™”ì‹œí‚¤ëŠ” í•¨ìˆ˜ */
+void idle(void)
+{
+	m_RotateAngle = m_RotateAngle + .1;
+	if (m_RotateAngle > 360)
+		m_RotateAngle -= 360;
 
-// Viewport TF¿Í Projection TF ±¸Çö
-// -> resize ÇÔ¼ö (WM_SIZE Ã³¸®)¿¡¼­ (= glutReshapeFunc)
+	glutPostRedisplay();
+}
+
+
+
+
+/* WM_SIZEì˜ ë©”ì‹œì§€ ì²˜ë¦¬ë¥¼ ìœ„í•œ callback í•¨ìˆ˜ */
+// ìœˆë„ìš° ìƒì„± ë° í¬ê¸° ë³€í™”ì‹œ WM_SIZE ë©”ì‹œì§€ ë°œìƒ
+
+// Viewport TFì™€ Projection TF êµ¬í˜„
+// -> resize í•¨ìˆ˜ (WM_SIZE ì²˜ë¦¬)ì—ì„œ (= glutReshapeFunc)
 void resize(int width, int height)
 {
 	// Viewport TF
-	glViewport(0, 0, width, height); // À©µµ¿ì Å©±â º¯È­½Ã viewport Àç¼³Á¤
-	printf("Window Change! Resize function ON\n"); // ¸Ş½ÃÁö Ãâ·Â È®ÀÎ¿ë
-	/* È­¸é ÁÂÇ¥ Á¤º¸ ¼³Á¤ */
-	glMatrixMode(GL_PROJECTION); // Åõ»ó ÁÂÇ¥°è ¼±¾ğ -> Projection TF °¡´ÉÇÏµµ·Ï
-	glLoadIdentity(); // ÁÂÇ¥°è ÃÊ±âÈ­
+	glViewport(0, 0, width, height); // ìœˆë„ìš° í¬ê¸° ë³€í™”ì‹œ viewport ì¬ì„¤ì •
+	printf("Window Change! Resize function ON\n"); // ë©”ì‹œì§€ ì¶œë ¥ í™•ì¸ìš©
+	/* í™”ë©´ ì¢Œí‘œ ì •ë³´ ì„¤ì • */
+	glMatrixMode(GL_PROJECTION); // íˆ¬ìƒ ì¢Œí‘œê³„ ì„ ì–¸ -> Projection TF ê°€ëŠ¥í•˜ë„ë¡
+	glLoadIdentity(); // ì¢Œí‘œê³„ ì´ˆê¸°í™”
 
 	// Projection TF
 	gluPerspective(45, (float)width / (float)height, 1, 500);
 
-	glMatrixMode(GL_MODELVIEW); // Projection ¼³Á¤ ÈÄ È¯¿ø
+	glMatrixMode(GL_MODELVIEW); // Projection ì„¤ì • í›„ í™˜ì›
 }
 
-/* xyz ÁÂÇ¥°è ±×¸®±â ÇÔ¼ö */
+/* xyz ì¢Œí‘œê³„ ê·¸ë¦¬ê¸° í•¨ìˆ˜ */
 void draw_axis(void)
 {
-	// ÁÂÇ¥Ãà µÎ²²
+	// ì¢Œí‘œì¶• ë‘ê»˜
 	glLineWidth(3);
 	glBegin(GL_LINES);
-	glColor3f(1, 0, 0); // XÃàÀº red
+	glColor3f(1, 0, 0); // Xì¶•ì€ red
 	glVertex3f(0, 0, 0);
 	glVertex3f(4, 0, 0);
 
-	glColor3f(0, 1, 0); // YÃàÀº green
+	glColor3f(0, 1, 0); // Yì¶•ì€ green
 	glVertex3f(0, 0, 0);
 	glVertex3f(0, 4, 0);
 
-	glColor3f(0, 0, 1); // ZÃàÀº blue
+	glColor3f(0, 0, 1); // Zì¶•ì€ blue
 	glVertex3f(0, 0, 0);
 	glVertex3f(0, 0, 4);
 	glEnd();
-	// µÎ²² ´Ù½Ã È¯¿ø
+	// ë‘ê»˜ ë‹¤ì‹œ í™˜ì›
 	glLineWidth(1);
+
+
+	//printf("Draw_Axis function ON\n");
 }
 
 
-// Display Callback ÇÔ¼ö
+// Display Callback í•¨ìˆ˜
 
 void draw(void)
 {
-	glClear(GL_COLOR_BUFFER_BIT);
+	// Scene drawing ì§ì „ì— color buffer + depth buffer clearing
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	/* Ãß°¡ */
-	glMatrixMode(GL_MODELVIEW); // Mode È°¼ºÈ­
-	glLoadIdentity(); // È°¼ºÈ­µÈ Matrix¸¦ ´ÜÀ§Çà·Ä·Î ÃÊ±âÈ­
+	/* ì¶”ê°€ */
+	glMatrixMode(GL_MODELVIEW); // Mode í™œì„±í™”
+	glLoadIdentity(); // í™œì„±í™”ëœ Matrixë¥¼ ë‹¨ìœ„í–‰ë ¬ë¡œ ì´ˆê¸°í™”
 
-	// (20,20,20)¿¡¼­ (0,0,0) ¹Ù¶óº¸´Â Viewing TF
-	gluLookAt(20, 20, 20, 0, 0, 0, 0, 1, 0);
+	// (10,10,10)ì—ì„œ (0,0,0) ë°”ë¼ë³´ëŠ” Viewing TF
+	gluLookAt(1, 1, 1, 0, 0, 0, 0, 1, 0);
 
+	// Step 2. Additional Clipping Plane
+	// ì‹œê°„ì— ë”°ë¼ yì¶• ì¤‘ì‹¬ìœ¼ë¡œ íšŒì „í•˜ë„ë¡ í•˜ê³  í‰ë©´ì˜ ìŒì˜ ì˜ì—­ì„ clipping outí•œë‹¤
+	glPushMatrix();
+
+	glRotatef(m_RotateAngle, 0, 1, 0); // idle í•¨ìˆ˜ì—ì„œ ê°’ ì¦ê°€ì‹œí‚¤ê¸°
+	GLdouble eq[4] = { 1.0, 0.0, 0.0, 0.0 };
+	glClipPlane(GL_CLIP_PLANE0, eq);
+	glEnable(GL_CLIP_PLANE0);
+
+	glPopMatrix();
+
+	// Teapot Drawing
 	glColor3f(1.0f, 0, 0);
-	glutWireTeapot(0.5f);
+	glutSolidTeapot(0.5f); // Wireì´ ì•„ë‹Œ ë©´ìœ¼ë¡œ ì¶œë ¥
 
 	draw_axis();
 
-	/* ±×¸®±â ¸í·ÉÀ» ¹Ù·Î ±×·¡ÇÈ Ä«µå·Î º¸³¿*/
-	glFlush(); // Buffer¿¡ ¸í·ÉÀ» ¸ğ¾ÆµĞ ÈÄ¿¡ ÇÑ¹ø¿¡ ¼öÇà
+	/* ê·¸ë¦¬ê¸° ëª…ë ¹ì„ ë°”ë¡œ ê·¸ë˜í”½ ì¹´ë“œë¡œ ë³´ëƒ„*/
+	glFlush(); // Bufferì— ëª…ë ¹ì„ ëª¨ì•„ë‘” í›„ì— í•œë²ˆì— ìˆ˜í–‰
 
-	/* ¾Ö´Ï¸ŞÀÌ¼Ç ±¸Çö */
-	glutSwapBuffers(); // Back bufferÀ» Front buffer·Î swap
-}
+	/* ì• ë‹ˆë©”ì´ì…˜ êµ¬í˜„ */
+	glutSwapBuffers(); // Back bufferì„ Front bufferë¡œ swap
 
-
-/* ÇÑ¹ø¿¡ clearÇÏ´Â ÇÔ¼ö -> ¸Ş´º µû·Î ¸¸µé¾îÁÜ */
-void clear(void)
-{
-	/* È­¸é ±ú²ıÇÏ°Ô Áö¿ì±â */
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	//printf("Draw function ON\n");
 }
 
 
 int main(int argc, char** argv)
 {
-	/* Window ÃÊ±âÈ­ */
+	/* Window ì´ˆê¸°í™” */
 	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH); // Depth Buffer ì‚¬ìš© ì„ ì–¸
 	glutInitWindowSize(500, 500);
 	glutInitWindowPosition(300, 300);
-	glutCreateWindow("12181761_±èÇöÁ¶_Lab08 GL");
+	glutCreateWindow("12181761_ê¹€í˜„ì¡°_Lab08 GL");
 
-	init(); // »ç¿ëÀÚ ÃÊ±âÈ­ ÇÔ¼ö
+	init(); // ì‚¬ìš©ì ì´ˆê¸°í™” í•¨ìˆ˜
 
 
-	/* Callback ÇÔ¼ö Á¤ÀÇ */
-	//glutIdleFunc(idle); // ÇÔ¼ö
-	glutDisplayFunc(draw); // draw: ½ÇÁ¦ ±×¸®±â ÇÔ¼ö
-	glutReshapeFunc(resize); // WM_SIZE Ã³¸®ÇÏ´Â Callback ÇÔ¼ö resize ÁöÁ¤
+	/* Callback í•¨ìˆ˜ ì •ì˜ */
+	glutIdleFunc(idle); // í•¨ìˆ˜
+	glutDisplayFunc(draw); // draw: ì‹¤ì œ ê·¸ë¦¬ê¸° í•¨ìˆ˜
+	glutReshapeFunc(resize); // WM_SIZE ì²˜ë¦¬í•˜ëŠ” Callback í•¨ìˆ˜ resize ì§€ì •
 
-	/* Looping ½ÃÀÛ */
-	glutMainLoop(); // °¡Àå ¸¶Áö¸·¿¡ ¿Àµµ·Ï...!
+	/* Looping ì‹œì‘ */
+	glutMainLoop(); // ê°€ì¥ ë§ˆì§€ë§‰ì— ì˜¤ë„ë¡...!
 
 	return 0;
 }
