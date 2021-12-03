@@ -1,3 +1,5 @@
+// Lect 11. Texture Mapping -  keyboard event
+
 #include <gl/glut.h> //OpenGL을 사용하기 위해 윈도우 시스템과 연결하는 함수들
 #include <stdio.h>
 #include <iostream>

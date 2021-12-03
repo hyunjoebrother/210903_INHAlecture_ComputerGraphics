@@ -1,8 +1,11 @@
+// Lect 9. Lighting - 광원 위치 바꾸는 keyboard event
+
+
 #include <gl/glut.h> //OpenGL을 사용하기 위해 윈도우 시스템과 연결하는 함수들
 #include <stdio.h>
 #include <iostream>
 using namespace std;
-
+	
 #include <string.h> // Character 출력 - strlen 함수
 
 // 태양의 자전을 의미하는 전역변수 
@@ -52,6 +55,7 @@ void init(void)
 
 	// Solar System에 광원 추가
 	// 0번 조명 관련 설정
+	// 광원의 color 지정
 	GLfloat light_ambient[] = { 0.4f, 0.2f, 0.2f, 1.0f };
 	GLfloat light_diffuse[] = { 1.0f, 3.0f, 1.0f, 1.0f };
 	GLfloat light_specular[] = { 2.0f, 1.0f, 2.0f, 1.0f };
@@ -60,6 +64,9 @@ void init(void)
 	glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
 
 	// 태양의 위치에 조명 설정
+	// 광원의 위치 지정 - Homogenious 좌표
+	// Viewing Transform 후 조명의 위치를 (0, 0, 0)으로 설정
+	// 즉, 태양이 정의되고 있는 local 좌표계의 중심
 	gluLookAt(15, 15, 15, 0, 0, 0, 0, 1, 0);
 	GLfloat light_position[] = { 0.0, 1.0, 1.0, 1.0 };
 	glLightfv(GL_LIGHT0, GL_POSITION, light_position);
@@ -67,7 +74,7 @@ void init(void)
 
 	// 조명 스위치와 0번 조명 스위치 켜기
 	glEnable(GL_LIGHTING);
-	glEnable(GL_LIGHT0);
+	glEnable(GL_LIGHT0); // 조명 id 지정 후 활성화
 }
 
 

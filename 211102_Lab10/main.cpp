@@ -1,3 +1,5 @@
+// Lect 10. Material Properties -  선택된 물체가 emmisive 갖도록 keyboard event
+
 #include <gl/glut.h> //OpenGL을 사용하기 위해 윈도우 시스템과 연결하는 함수들
 #include <stdio.h>
 #include <iostream>
@@ -71,7 +73,7 @@ void init(void)
 	glEnable(GL_LIGHT0);
 
 	
-	// Material 반사특성 설정
+	// Material 반사특성 설정 - 붉은색 반사되도록
 	GLfloat ambient_Sun[] = { 0.2f, 0.2f, 0.2f, 1.0f };
 	GLfloat diffuse_Sun[] = { 1.0f, 0.0f, 0.0f, 1.0f };
 	GLfloat specular_Sun[] = { 1.0f, 1.0f, 1.0f, 1.0f };
@@ -81,13 +83,15 @@ void init(void)
 	glMaterialf(GL_FRONT, GL_SHININESS, 64);
 
 
-	// Emissive 속성 추가
+	// Emissive 속성 추가 - 조명 자체를 모델링하여 어두운 외면를 밝힘
+	// emmisive light 설정
 	GLfloat emission[] = { 1.0f, 0.0f, 0.0f, 1.0f };
 	glMaterialfv(GL_FRONT, GL_EMISSION, emission);
-	glutSolidSphere(3, 30, 30);
+	glutSolidSphere(3, 30, 30); // 태양 그리기
 	emission[0] = 0.0f;
 	glMaterialfv(GL_FRONT, GL_EMISSION, emission);
 
+	//// 여러 개의 material property 설정하기
 	// Material 속성 추가
 	glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
 	// Material Mode 설정
