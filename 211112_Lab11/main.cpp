@@ -326,7 +326,7 @@ out3:
 
 /* Callback 함수 정의 */
 
-void mouse(int button, int state, int x, int y);
+void mouse(int button, int state, int x, int y) {};
 
 void mouseWheel(int but, int dir, int x, int y)
 {
@@ -337,11 +337,11 @@ void mouseWheel(int but, int dir, int x, int y)
 			radius--;
 			printf("\'zoom in!\', radius: %d\n", radius);
 		}
-		else {
-			if (radius < 100) {
-				radius++;
-				printf("\'zoom out!\', radius: %d\n", radius);
-			}
+	}
+	else {
+		if (radius < 100) {
+			radius++;
+			printf("\'zoom out!\', radius: %d\n", radius);
 		}
 	}
 	glutPostRedisplay();
@@ -550,7 +550,7 @@ void specialKeyboard(int key, int x, int y)
 
 // 조작법 console 출력
 void printInstruction() {
-	printf("\n----------keyboard navigation----------\n\'");
+	printf("\n----------keyboard navigation----------\n");
 	printf("\'x\' : zoom in\n");
 	printf("\'z\' : zoom out\n");
 	printf("방향키 : camera 위치\n");
@@ -575,7 +575,7 @@ void setDefault()
 	set_materialProperty = true;
 }
 
-void draw_string(void* font, const char* str, float x_position, float y_position, float z_position, float red, float green, float blue)
+void draw_string(void* font, const char* str, float x_position, float y_position, float red, float green, float blue)
 {
 	glPushAttrib(GL_LIGHTING_BIT);
 	glDisable(GL_LIGHTING);
@@ -586,7 +586,7 @@ void draw_string(void* font, const char* str, float x_position, float y_position
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
 	glLoadIdentity();
-	glColor3f(red, green, blue);
+	glColor3f(red, green, blue);   
 	glRasterPos3f(x_position, y_position, 0);
 	for (unsigned int i = 0; i < strlen(str); i++)
 	{
@@ -601,20 +601,20 @@ void draw_string(void* font, const char* str, float x_position, float y_position
 
 void draw_text()
 {
-	char* str = (char*)"Light(camera)";
+	char* str = (char*)"Light (camera)";
 
 	switch (lightMode) {
 	case 0:
-		str = (char*)"Light(camera)";
+		str = (char*)"Light (camera)";
 		break;
 	case 1:
-		str = (char*)"Light(cube)";
+		str = (char*)"Light (cube)";
 		break;
 	case 2:
-		str = (char*)"Light(cylinder)";
+		str = (char*)"Light (cylinder)";
 		break;
 	case 3: 
-		str = (char*)"Light(sphere)";
+		str = (char*)"Light (sphere)";
 		break;
 	default:
 		break;
